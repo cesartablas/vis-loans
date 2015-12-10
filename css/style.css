@@ -1,0 +1,185 @@
+body {
+  font-family: "Lato", sans-serif;
+  max-width: 1200px;
+  margin: 0 auto;
+  /*outline: red solid 1px;*/
+}
+
+h1 {
+  text-align: center;
+  color: #003c30;
+  font-weight: 300;
+}
+
+#tale, #facts, nav {
+  height: 100px;
+}
+
+#tale {
+  color: #01665e;
+  font-size: 1.5em;
+  font-weight: 300;
+}
+
+#facts {
+  color: #01665e;
+  font-size: 0.8em;
+  font-weight: 300;
+}
+
+.punchline {
+  font-weight: 400;
+}
+.btn, .btn:active, .btn:visited {
+  color: #543005;
+  font-weight: 300;
+  background-color: #f6e8c3;
+  border-color: #543005;
+}
+
+.btn:hover {
+  color: #003c30;
+  font-weight: 400;
+  background-color: #c7eae5;
+  border-color: #003c30;
+}
+
+.ct, .ct:visited {
+  color: #543005;
+  text-decoration: none;
+  font-size: 1em;
+  font-weight: 300;
+}
+
+#cloud {
+  width: 900px;
+  height: 450px;
+  position: relative;
+  /*outline: red solid 1px;*/
+
+}
+
+#cloud .text, .tick, .domain {
+  stroke: #01665e ;
+  stroke-width: 0.5;
+  font-size: 1em;
+  font-weight: 100;
+}
+
+.tick line{
+  color: #543005;
+  opacity: 0.4;
+}
+
+#boxplots{
+  width: 300px;
+  height: 450px;
+  float: left;
+  position: relative;
+  /*outline: red solid 1px;*/
+}
+
+.tooltip {
+  white-space: pre;
+  max-width: none;
+}
+
+.tooltip > .tooltip-inner {
+  background-color: #01665e;
+}
+
+/*svg {
+    position: relative;
+    top: 0;
+    left: 0;
+}*/
+
+/*
+ * the color scale
+#543005  dark brown
+#8c510a
+#bf812d
+#dfc27d
+#f6e8c3
+
+#c7eae5
+#80cdc1
+#35978f
+#01665e
+#003c30  dark blue
+*/
+circle {
+  fill: #f6e8c3;
+  stroke: #543005;
+  stroke-width: 0.7;
+  opacity: 0.7;
+}
+
+circle.filtered {
+  fill: #80cdc1;
+  stroke: #003c30;
+  stroke-width: 0.7;
+  opacity: 0.7;
+}
+
+/*btn-primary 
+.axis path,
+.axis line {
+  fill: none;
+  stroke: black;
+}
+
+.line {
+  fill: none;
+  stroke: blue;
+  stroke-width: 2px;
+}
+.tick text{
+  font-size: 0.8em;
+}
+
+
+.boxplot {
+  font: 10px sans-serif;
+}
+/*.tooltip-wide .tooltip {min-width:200px;}*/
+/*.tooltip {
+  position: absolute;
+  text-align: center;
+  width: 150px;
+  height: 50px;
+  padding: 2px;
+  font: 12px sans-serif;
+  background: #80cdc1;
+  border: 0px;
+  border-radius: 5px;
+  pointer-events: none;
+}*/
+.boxplot rect {
+  fill: #f6e8c3;
+  stroke: #543005;
+  stroke-width: 1px;
+}
+
+line.median {
+  stroke: #35978f;
+  stroke-width: 2.5px
+}
+
+.boxplot line,
+.boxplot box,
+.boxplot circle {
+  fill: #fff;
+  stroke: #000;
+  stroke-width: 2.5px;
+}
+
+.boxplot .center {
+  stroke-dasharray: 3, 3;
+}
+
+.boxplot .outlier {
+  fill: none;
+  stroke: #ccc;
+}
+
