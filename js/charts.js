@@ -1,28 +1,31 @@
-function draw_cloud(pl) {
+function draw_cloud(loan_data) {
+  
   "use strict";
-  var pl = pl.filter(function(d) {
+
+  window.pl = loan_data.filter(function(d) {
     return d["ProsperRating (numeric)"] != "";});
+
   var total_width = 850,
       total_height = 450,
       margin = {top:100, right:10, bottom:50, left:100},
       width = total_width - margin.left - margin.right,
       height = total_height - margin.top - margin.bottom;
+
   var cloud = d3.select("#cloud")
     .append("svg")
-      //.attr("xmlns", "http://www.w3.org/2000/svg")
-      //.attr("version", "1.1")
-      //.attr("viewBox", "0 0 " + total_width + " " + total_height)
-      //.attr("preserveAspectRatio", "xMidYMid meet")
       .attr("width", total_width)
       .attr("height", total_height)
     .append("g")
       .attr("class", "cloud");
+
   var xScale = d3.scale.linear()
     .range([margin.left, margin.left + width])
     .domain([0.0, pl.length]);
-  var yScale = d3.scale.linear()
+
+  window.yScale = d3.scale.linear()
     .range([margin.top, margin.top + height])
     .domain([0.5, 0.0]);
+
   var yAxis = d3.svg.axis()
     .scale(yScale)
     .orient("left")
@@ -31,20 +34,25 @@ function draw_cloud(pl) {
     .tickPadding(10)
     .outerTickSize(1)
     .innerTickSize(-width);
+
   cloud.append("g")
     .attr("class", "axis yaxis")
     .attr("transform", "translate(" + 0.95 * margin.left + ", 0)")
     .call(yAxis);
+
   cloud.append("text")
     .attr("class", "axis yaxis text")
     .attr("text-anchor", "middle")
     .attr("transform", "translate("+ (margin.left/2) +","+(height/2+margin.top)+")rotate(-90)")
     .text("Borrower APR");
+
   var div = d3.select("body").append("div")
     .attr("class", "tooltip")
     .style("opacity", 0); 
+
   var n = 0;
-  var points = cloud.selectAll("circle")
+
+  window.points = cloud.selectAll("circle")
       .data(pl)
     .enter()
       .append("circle")
@@ -58,56 +66,26 @@ function draw_cloud(pl) {
         });
 
   $("svg circle").tooltip({"data-toggle": "tooltip", "container": "body"});
-  
-  points.call(draw_box, yScale);
 
-/*
-  var filtered = points.filter(function(d) {
-    return (d.CreditScoreRangeUpper >= 800) && (d.CreditScoreRangeUpper <= 1000);
-  });
+  //page_0();
+  page_1();
 
-  var filtered = points.filter(function(d) {
-    return (d.Term == 60);
-  });
-  debugger;
-
-  filtered.attr("class", "filtered");
-  filtered.call(draw_box, yScale);
-*/
-/*
-  filtered.call(draw_box, yScale);
-  filtered.call(draw_box, yScale);
-  filtered.call(draw_box, yScale);
-  filtered.call(draw_box, yScale);
-*/
 }
 
-function draw_box(a, yScale){
-  "use strict";
-  var rates = [];
-  a[0].forEach(
-        function(d){rates.push(+d.__data__.BorrowerAPR);});
-  rates = rates.sort();
-  var q1 = d3.quantile(rates, 0.25),
-      q2 = d3.quantile(rates, 0.50),
-      q3 = d3.quantile(rates, 0.75),
-      mean = d3.mean(rates),
-      iqr = q3 - q1,
-      w1 = q1 - 1.5 * iqr,
-      w3 = q3 + 1.5 * iqr,
-      min_ = d3.min(rates),
-      max_ = d3.max(rates);
 
-  w1 = w1 < min_ ? min_ : w1;
-  w3 = w3 > max_ ? max_ : w3;
-  var outliers = rates.filter(function(d,i) {return (d > w3 || d < w1);});
-  var total_width = 45,
+function draw_box(a, yScale, val, id){
+  
+  "use strict";
+  
+  $("#" + id).html("");
+  
+  var total_width = 90,
       total_height = 400,
-      margin = {top:100, right:10, bottom:10, left:10},
+      margin = {top:100, right:25, bottom:10, left:25},
       width = total_width - margin.left - margin.right,
       height = total_height - margin.top - margin.bottom;
 
-  var boxplot = d3.select("#boxplots")
+  var boxplot = d3.select("#" + id)
     .append("svg")
       //.attr("xmlns", "http://www.w3.org/2000/svg")
       //.attr("version", "1.1")
@@ -119,7 +97,7 @@ function draw_box(a, yScale){
       .attr("class", "boxplot");
 
   boxplot.selectAll("line.whisker")
-      .data([w1, w3])
+      .data([val.w1, val.w3])
     .enter()
       .append("line")
       .attr("x1", margin.left)
@@ -131,7 +109,7 @@ function draw_box(a, yScale){
       .attr("title", function(d) {return d3.format(".1%")(d)});
 
   boxplot.selectAll("rect.box")
-      .data([[q3,q1]])
+      .data([[val.q3, val.q1]])
     .enter()
       .append("rect")
       .attr("x", 1.5 * margin.left)
@@ -145,7 +123,7 @@ function draw_box(a, yScale){
                d3.format(".1%")(d[0]) } );
             
   boxplot.selectAll("line.center")
-      .data([[w1, w3]])
+      .data([[val.w1, val.w3]])
     .enter()
       .append("line")
       .attr("x1", total_width / 2)
@@ -155,7 +133,7 @@ function draw_box(a, yScale){
       .attr("class", "center");
 
   boxplot.selectAll("line.median")
-      .data([q2])
+      .data([val.q2])
     .enter()
       .append("line")
       .attr("x1", 1.5 * margin.left)
@@ -167,7 +145,7 @@ function draw_box(a, yScale){
       .attr("title", function(d) {return d3.format(".1%")(d)});
       
   boxplot.selectAll("circle.outlier")
-      .data(outliers)
+      .data(val.outliers)
     .enter()
       .append("circle")
       .attr("class", "outlier")
@@ -175,7 +153,268 @@ function draw_box(a, yScale){
       .attr("cx", total_width / 2)
       .attr("cy", function(d) { return yScale(d);});
 
+  boxplot.append("text")
+    .attr("class", "median text")
+    .attr("text-anchor", "middle")
+    .attr("transform", "translate(" + (total_width - 13) + "," + (yScale(val.q2) + 5) + ")")
+    .text(d3.format(".0%")(val.q2));
+
   $("svg line").tooltip({"data-toggle": "tooltip", "container": "body"});
   $("svg rect").tooltip({"data-toggle": "tooltip", "container": "body"});
 
+}
+
+
+function draw_hist(values) {
+  
+  "use strict";
+  
+  $("#facts").html("");
+  
+  var total_width = 300,
+      total_height = 200,
+      margin = {top:50, right:25, bottom:25, left:25},
+      width = total_width - margin.left - margin.right,
+      height = total_height - margin.top - margin.bottom;
+
+  var formatCount = d3.format(",.0f");
+
+  var x = d3.scale.linear()
+    .domain([d3.min(values), d3.max(values)])
+    .range([0, width])
+    .nice();
+
+  var data = d3.layout.histogram()
+    .bins(x.ticks(10))(values);
+
+  var y = d3.scale.linear()
+    .domain([0, d3.max(data, function(d) { return d.y; })])
+    .range([height, 0]);
+
+  var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom")
+    .ticks(6)
+    .tickSize(1);
+
+  var hist = d3.select("#facts").append("svg")
+      .attr("width", total_width)
+      .attr("height", total_height)
+    .append("g")
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+  hist.append("g")
+    .attr("class", "x axis")
+    .attr("transform", "translate(0," + height + ")")
+    .call(xAxis);
+
+  hist.append("text")
+    .attr("class", "axis xaxis text")
+    .attr("text-anchor", "left")
+    .attr("transform", "translate(" + (margin.left) + "," + ( - margin.top/2) + ")")
+    .text("Distribution of Credit Scores");
+
+  var bar = hist.selectAll(".bar")
+      .data(data)
+    .enter().append("g")
+      .attr("class", "bar")
+      .attr("transform", function(d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; });
+
+  bar.append("rect")
+    .attr("x", 1)
+    .attr("width", (x(data[1].x) - x(data[0].x)) - 1)
+    .attr("height", function(d) { return height - y(d.y); });
+
+  return data;
+
+}
+
+
+function page_0() {
+
+  "use strict";
+
+  $("#box1").html("");
+ 
+  var val = summary(points),
+      term = [1, 3, 5],
+      total_payments = [];
+      
+  term.forEach(function(t, i) {
+    total_payments.push({});
+    for (var v in val) {
+      total_payments[i][v] = total_payment(val[v] ,t);
+    }
+  });
+
+  points.call(draw_box, yScale, val, "box0");
+
+  $("#tale").html("a high interest rate (and the term) on a loan make the difference between paying back " +
+  d3.format(".0%")(total_payments[0]["min"]) + " or " + d3.format(".0%")(total_payments[2]["max"]) +
+  " of the money borrowed<br><span class='punchline'>what drives interest rates up or down ?</span>");
+
+  $("#facts").html("<table class='table-condensed'>" +
+  "<h5>Total payment by rate and term</h5>"+
+  "<thead>"+
+    "<tr><th>stat</th><th>rate</th><th>1 year</th><th>3 years</th><th>5 years</th></tr>"+
+  "</thead>"+
+  "<tbody>"+
+    "<tr>" +
+      "<td>" + "max" + "</td>" +
+      "<td>" + d3.format(".1%")(val["max"]) + "</td>" +
+      "<td>" + d3.format(".0%")(total_payments[0]["max"]) + "</td>" +
+      "<td>" + d3.format(".0%")(total_payments[1]["max"]) + "</td>" +
+      "<td class='notice'>" + d3.format(".0%")(total_payments[2]["max"]) + "</td>" +
+    "</tr>" +
+    "<tr>" +
+      "<td>" + "Q3" + "</td>" +
+      "<td>" + d3.format(".1%")(val["q3"]) + "</td>" +
+      "<td>" + d3.format(".0%")(total_payments[0]["q3"]) + "</td>" +
+      "<td>" + d3.format(".0%")(total_payments[1]["q3"]) + "</td>" +
+      "<td>" + d3.format(".0%")(total_payments[2]["q3"]) + "</td>" +
+    "</tr>" +
+    "<tr>" +
+      "<td>" + "median" + "</td>" +
+      "<td>" + d3.format(".1%")(val["q2"]) + "</td>" +
+      "<td>" + d3.format(".0%")(total_payments[0]["q2"]) + "</td>" +
+      "<td>" + d3.format(".0%")(total_payments[1]["q2"]) + "</td>" +
+      "<td>" + d3.format(".0%")(total_payments[2]["q2"]) + "</td>" +
+    "</tr>" +
+    "<tr>" +
+      "<td>" + "Q1" + "</td>" +
+      "<td>" + d3.format(".1%")(val["q1"]) + "</td>" +
+      "<td>" + d3.format(".0%")(total_payments[0]["q1"]) + "</td>" +
+      "<td>" + d3.format(".0%")(total_payments[1]["q1"]) + "</td>" +
+      "<td>" + d3.format(".0%")(total_payments[2]["q1"]) + "</td>" +
+    "</tr>" +
+    "<tr>" +
+      "<td>" + "min" + "</td>" +
+      "<td>" + d3.format(".1%")(val["min"]) + "</td>" +
+      "<td class='notice'>" + d3.format(".0%")(total_payments[0]["min"]) + "</td>" +
+      "<td>" + d3.format(".0%")(total_payments[1]["min"]) + "</td>" +
+      "<td>" + d3.format(".0%")(total_payments[2]["min"]) + "</td>" +
+    "</tr>" +
+  "</tbody>"+
+  "</table>");
+
+  $("nav ul").html("<li class='next'><button class='btn btn-default' type='button' onclick='page_1()'><span aria-hidden='true'></span>next &rarr;</button></li>");
+
+  $("#strategies").attr("data-content", "&bull; shorter term requires higher payments\n&bull; shorter term translates into less money paid back\n&bull; lower rate means less money paid back");
+  
+  $("#dataset").attr("data-content",
+  "Prosper Marketplace Inc. is an intermediary\nof peer to peer lending in the US.\n\nThe dataset contains 114K observations about\nProsper loans, each with 81 variables.\n\nFor this visualization the dataset has been\ntruncated to only the datapoints with the\nnew Prosper rating and the variables used.");
+
+  $("#references").attr("data-content", "my own <a target='_blank' href='https://cesartablas.github.io/eda-loans/'>exploratory data analysis</a>\n");
+
+}
+
+
+function page_1() {
+
+  "use strict";
+  
+  $("#tale").html("the credit score represents a lender's creditworthiness and the interest rate is a reward for the risk of lending him the money<br><span class='punchline'>what strategies can we use to increase our credit score ?</span>");
+
+  $("#strategies").attr("data-content", "&bull; the higher the credit scores the lower the interest rate");
+  
+  $("#dataset").attr("data-content",
+  "Distribution of Credit Scores<br><img src='Rplot01.png' alt='Credit Scores Histogram' height='100' width='200'><br>Prosper has their own Rating based on the\ncredit scores reported by the different agencies.\n\nFor this visualization I chose the variable\nCreditScoreRangeUpper as the Credit Score");
+
+  $("#references").attr("data-content", "My previous <a target='_blank' href='https://cesartablas.github.io/eda-loans/'>Exploratory Data Analysis</a>\n");
+
+  $("nav ul").html("<li class='previous'><button class='btn btn-default' type='button' onclick='page_0()'><span aria-hidden='true'></span>&larr; previous</button></li><li class='next'><button class='btn btn-default' type='button' onclick='page_3()'><span aria-hidden='true'></span>next &rarr;</button></li>");
+
+  var creditScores = pl.map(function(d) {return +d.CreditScoreRangeUpper;});
+
+  var data = draw_hist(creditScores);
+
+  var bars = d3.selectAll(".bar");
+  
+  bars[0].forEach(function(e, i, a) {
+    
+    var lower_limit = e.__data__.x,
+        upper_limit = lower_limit + e.__data__.dx;
+
+    var filtered = points.filter(function(d) {
+      return  (d.CreditScoreRangeUpper >= lower_limit) &&
+              (d.CreditScoreRangeUpper <= upper_limit);
+    });
+
+    var val = summary(filtered);
+    
+    filtered.attr("class", "filtered");
+    filtered.call(draw_box, yScale, val, "box1");
+
+    e.setAttribute("class", "bar filtered");
+
+    debugger;
+
+    d3.selectAll("circle")
+      .classed("filtered", false)
+
+    d3.selectAll("g.bar.filtered")
+      .classed("filtered", false);
+
+      //$("#box1").html("");
+
+    });
+ 
+}
+
+
+function total_payment(R, N) {
+  /**
+   * calculate the total ammount paid
+   * given a PV=1, and FV=0, payments once a month,
+   * and the given annual interest rate (R) and term in years (N)
+   * 
+   * parameters:
+   * R: Annual interest rate
+   * N: Number of years to pay PV
+   * 
+   * returns:
+   * total payment as percentage 
+   */
+
+  "use strict";
+
+  var PV = 1,
+       r = R / 12,
+       n = N * 12;
+   var P = r * PV / (1 - Math.pow(1 + r, -n));
+   return P * n;
+}
+
+
+function summary(a) {
+  /**
+   * calculate the summary statistics of the BorrowerAPR
+   * in an array of points. 
+   *
+   */
+  
+  "use strict";
+    
+  var rates = a[0].map(function(d) {return +d.__data__.BorrowerAPR;});
+
+  rates = rates.sort();
+
+  var q1 = d3.quantile(rates, 0.25),
+      q2 = d3.quantile(rates, 0.50),
+      q3 = d3.quantile(rates, 0.75),
+      iqr = q3 - q1,
+      w1 = q1 - 1.5 * iqr,
+      w3 = q3 + 1.5 * iqr,
+      min_ = d3.min(rates),
+      max_ = d3.max(rates);
+
+  w1 = w1 < min_ ? min_ : w1;
+  w3 = w3 > max_ ? max_ : w3;
+
+  var outliers = rates.filter(function(d, i) {return (d > w3 || d < w1);});
+
+  return {"q1": q1, "q2": q2, "q3": q3,
+          "w1": w1, "w3": w3,
+          "min": min_, "max": max_,
+          "outliers": outliers};
 }

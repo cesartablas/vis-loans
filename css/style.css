@@ -2,7 +2,6 @@ body {
   font-family: "Lato", sans-serif;
   max-width: 1200px;
   margin: 0 auto;
-  /*outline: red solid 1px;*/
 }
 
 h1 {
@@ -30,6 +29,11 @@ h1 {
 .punchline {
   font-weight: 400;
 }
+
+.notice {
+  color: red;
+}
+
 .btn, .btn:active, .btn:visited {
   color: #543005;
   font-weight: 300;
@@ -55,8 +59,6 @@ h1 {
   width: 900px;
   height: 450px;
   position: relative;
-  /*outline: red solid 1px;*/
-
 }
 
 #cloud .text, .tick, .domain {
@@ -76,7 +78,6 @@ h1 {
   height: 450px;
   float: left;
   position: relative;
-  /*outline: red solid 1px;*/
 }
 
 .tooltip {
@@ -88,11 +89,16 @@ h1 {
   background-color: #01665e;
 }
 
-/*svg {
+.popover {
+  white-space: pre;
+  max-width: none;
+}
+
+svg {
     position: relative;
     top: 0;
     left: 0;
-}*/
+}
 
 /*
  * the color scale
@@ -112,74 +118,99 @@ circle {
   fill: #f6e8c3;
   stroke: #543005;
   stroke-width: 0.7;
-  opacity: 0.7;
+  opacity: 0.3;
 }
 
 circle.filtered {
   fill: #80cdc1;
   stroke: #003c30;
   stroke-width: 0.7;
-  opacity: 0.7;
-}
-
-/*btn-primary 
-.axis path,
-.axis line {
-  fill: none;
-  stroke: black;
-}
-
-.line {
-  fill: none;
-  stroke: blue;
-  stroke-width: 2px;
-}
-.tick text{
-  font-size: 0.8em;
+  opacity: 1;
 }
 
 
-.boxplot {
-  font: 10px sans-serif;
-}
-/*.tooltip-wide .tooltip {min-width:200px;}*/
-/*.tooltip {
-  position: absolute;
-  text-align: center;
-  width: 150px;
-  height: 50px;
-  padding: 2px;
-  font: 12px sans-serif;
-  background: #80cdc1;
-  border: 0px;
-  border-radius: 5px;
-  pointer-events: none;
-}*/
-.boxplot rect {
+#box0 rect {
   fill: #f6e8c3;
   stroke: #543005;
-  stroke-width: 1px;
+  stroke-width: 1;
 }
 
-line.median {
+#box0 line.center {
+  stroke-dasharray: 3, 3;
+  stroke-width: 1;
+}
+
+#box0 text.median {
+  color: #35978f;
+}
+
+#box0 line {
+  stroke: #543005;
+  stroke-width: 3;
+}
+
+
+#box0 line.median {
   stroke: #35978f;
+  stroke-width: 3;
+}
+
+#box0 .outlier {
+  fill: none;
+  stroke: #543005;
+  stroke-width: 1;
+}
+
+
+#box1 rect {
+  fill: #c7eae5;
+  stroke: #003c30;
+  stroke-width: 0.7;
+}
+
+#box1 line.center {
+  stroke-dasharray: 3, 3;
+  stroke-width: 1;
+}
+
+#box1 line {
+  stroke: #003c30;
+  stroke-width: 3;
+}
+
+
+#box1 line.median {
+  stroke: #bf812d;
   stroke-width: 2.5px
 }
 
-.boxplot line,
-.boxplot box,
-.boxplot circle {
-  fill: #fff;
-  stroke: #000;
-  stroke-width: 2.5px;
+#box1 text.median {
+  color: #003c30;
 }
 
-.boxplot .center {
-  stroke-dasharray: 3, 3;
-}
-
-.boxplot .outlier {
+#box1 .outlier {
   fill: none;
-  stroke: #ccc;
+  stroke: #003c30;
+  stroke-width: 1;
 }
 
+.bar rect {
+  fill: #c7eae5;
+  shape-rendering: crispEdges;
+}
+
+.filtered rect {
+  fill: #35978f;
+  shape-rendering: crispEdges;
+}
+
+/*.bar text {
+  stroke: #003c30;
+}
+
+.axis path, .axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+*/
