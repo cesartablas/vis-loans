@@ -1,13 +1,15 @@
 function draw_cloud(loan_data) {
   
   "use strict";
+  
+  $("#spinner").remove();
 
   window.pl = loan_data.filter(function(d) {
     return d["ProsperRating (numeric)"] != "";});
 
   var total_width = 850,
-      total_height = 450,
-      margin = {top:100, right:10, bottom:50, left:100},
+      total_height = 350,
+      margin = {top:10, right:10, bottom:10, left:100},
       width = total_width - margin.left - margin.right,
       height = total_height - margin.top - margin.bottom;
 
@@ -67,8 +69,7 @@ function draw_cloud(loan_data) {
 
   $("svg circle").tooltip({"data-toggle": "tooltip", "container": "body"});
 
-  //page_0();
-  page_1();
+  page_0();
 
 }
 
@@ -80,8 +81,8 @@ function draw_box(a, yScale, val, id){
   $("#" + id).html("");
   
   var total_width = 90,
-      total_height = 400,
-      margin = {top:100, right:25, bottom:10, left:25},
+      total_height = 350,
+      margin = {top:10, right:25, bottom:10, left:25},
       width = total_width - margin.left - margin.right,
       height = total_height - margin.top - margin.bottom;
 
@@ -165,7 +166,7 @@ function draw_box(a, yScale, val, id){
 }
 
 
-function draw_hist(values) {
+function draw_hist(values, label) {
   
   "use strict";
   
@@ -173,11 +174,9 @@ function draw_hist(values) {
   
   var total_width = 300,
       total_height = 200,
-      margin = {top:50, right:25, bottom:25, left:25},
+      margin = {top:20, right:25, bottom:50, left:25},
       width = total_width - margin.left - margin.right,
       height = total_height - margin.top - margin.bottom;
-
-  var formatCount = d3.format(",.0f");
 
   var x = d3.scale.linear()
     .domain([d3.min(values), d3.max(values)])
@@ -209,21 +208,29 @@ function draw_hist(values) {
     .call(xAxis);
 
   hist.append("text")
+    .attr("class", "label label-default text")
+    .attr("text-anchor", "left")
+    .attr("transform", "translate(125,5)")
+    .text("Click on the bar to explore");
+  
+  hist.append("text")
     .attr("class", "axis xaxis text")
     .attr("text-anchor", "left")
-    .attr("transform", "translate(" + (margin.left) + "," + ( - margin.top/2) + ")")
-    .text("Distribution of Credit Scores");
+    .attr("transform", "translate(75,160)")
+    .text(label);
 
   var bar = hist.selectAll(".bar")
       .data(data)
     .enter().append("g")
       .attr("class", "bar")
       .attr("transform", function(d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; });
-
+      
   bar.append("rect")
     .attr("x", 1)
     .attr("width", (x(data[1].x) - x(data[0].x)) - 1)
-    .attr("height", function(d) { return height - y(d.y); });
+    .attr("height", function(d) { return height - y(d.y); })
+    .on("click", filter_);
+
 
   return data;
 
@@ -315,6 +322,8 @@ function page_1() {
   
   $("#tale").html("the credit score represents a lender's creditworthiness and the interest rate is a reward for the risk of lending him the money<br><span class='punchline'>what strategies can we use to increase our credit score ?</span>");
 
+  $("#facts").append("<h4 class='label label-default'>Explore by clicking on the bars</h4>");
+
   $("#strategies").attr("data-content", "&bull; the higher the credit scores the lower the interest rate");
   
   $("#dataset").attr("data-content",
@@ -326,39 +335,10 @@ function page_1() {
 
   var creditScores = pl.map(function(d) {return +d.CreditScoreRangeUpper;});
 
-  var data = draw_hist(creditScores);
+  var data = draw_hist(creditScores, "Credit Scores");
 
-  var bars = d3.selectAll(".bar");
-  
-  bars[0].forEach(function(e, i, a) {
-    
-    var lower_limit = e.__data__.x,
-        upper_limit = lower_limit + e.__data__.dx;
+  $("g.bar :first").d3Click();
 
-    var filtered = points.filter(function(d) {
-      return  (d.CreditScoreRangeUpper >= lower_limit) &&
-              (d.CreditScoreRangeUpper <= upper_limit);
-    });
-
-    var val = summary(filtered);
-    
-    filtered.attr("class", "filtered");
-    filtered.call(draw_box, yScale, val, "box1");
-
-    e.setAttribute("class", "bar filtered");
-
-    debugger;
-
-    d3.selectAll("circle")
-      .classed("filtered", false)
-
-    d3.selectAll("g.bar.filtered")
-      .classed("filtered", false);
-
-      //$("#box1").html("");
-
-    });
- 
 }
 
 
@@ -418,3 +398,41 @@ function summary(a) {
           "min": min_, "max": max_,
           "outliers": outliers};
 }
+
+
+function filter_() {
+  
+  d3.selectAll("circle")
+    .classed("filtered", false)
+
+  d3.selectAll("g.bar.filtered")
+    .classed("filtered", false);
+
+  var bar = this.parentElement.__data__;
+  
+    var lower_limit = bar.x,
+        upper_limit = lower_limit + bar.dx;
+
+    var filtered = points.filter(function(d) {
+      return  (d.CreditScoreRangeUpper >= lower_limit) &&
+              (d.CreditScoreRangeUpper <= upper_limit);
+    });
+
+    var val = summary(filtered);
+    
+    filtered.attr("class", "filtered");
+    filtered.call(draw_box, yScale, val, "box1");
+
+    this.parentElement.setAttribute("class", "bar filtered");
+
+}
+
+jQuery.fn.d3Click = function () {
+  /*http://stackoverflow.com/a/11180172*/
+  this.each(function (i, e) {
+    var evt = document.createEvent("MouseEvents");
+    evt.initMouseEvent("click", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+
+    e.dispatchEvent(evt);
+  });
+};

@@ -11,7 +11,8 @@ h1 {
 }
 
 #tale, #facts, nav {
-  height: 100px;
+  height: 200px;
+  /* outline: red solid 1px; */
 }
 
 #tale {
@@ -57,8 +58,10 @@ h1 {
 
 #cloud {
   width: 900px;
-  height: 450px;
+  height: 350px;
   position: relative;
+    /* outline: red solid 1px; */
+
 }
 
 #cloud .text, .tick, .domain {
@@ -75,9 +78,11 @@ h1 {
 
 #boxplots{
   width: 300px;
-  height: 450px;
+  height: 350px;
   float: left;
   position: relative;
+    /* outline: red solid 1px; */
+
 }
 
 .tooltip {
@@ -116,9 +121,9 @@ svg {
 */
 circle {
   fill: #f6e8c3;
-  stroke: #543005;
+  stroke: #dfc27d;
   stroke-width: 0.7;
-  opacity: 0.3;
+  opacity: 0.2;
 }
 
 circle.filtered {
@@ -214,3 +219,21 @@ circle.filtered {
   shape-rendering: crispEdges;
 }
 */
+
+#spinner{
+  margin: 200px auto;
+}
+.glyphicon-refresh-animate {
+    -animation: spin .7s infinite linear;
+    -webkit-animation: spin2 .7s infinite linear;
+}
+
+@-webkit-keyframes spin2 {
+    from { -webkit-transform: rotate(0deg);}
+    to { -webkit-transform: rotate(360deg);}
+}
+
+@keyframes spin {
+    from { transform: scale(1) rotate(0deg);}
+    to { transform: scale(1) rotate(360deg);}
+}
