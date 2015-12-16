@@ -123,14 +123,14 @@ circle {
   fill: #f6e8c3;
   stroke: #dfc27d;
   stroke-width: 0.7;
-  opacity: 0.2;
+  opacity: 0.4;
 }
 
 circle.filtered {
   fill: #80cdc1;
   stroke: #003c30;
   stroke-width: 0.7;
-  opacity: 1;
+  opacity: .6;
 }
 
 
@@ -209,16 +209,10 @@ circle.filtered {
   shape-rendering: crispEdges;
 }
 
-/*.bar text {
-  stroke: #003c30;
-}
 
-.axis path, .axis line {
-  fill: none;
-  stroke: #000;
-  shape-rendering: crispEdges;
-}
-*/
+/* animated loading spinner
+ * http://www.bootply.com/128062
+ * */
 
 #spinner{
   margin: 200px auto;
@@ -234,6 +228,6 @@ circle.filtered {
 }
 
 @keyframes spin {
-    from { transform: scale(1) rotate(0deg);}
-    to { transform: scale(1) rotate(360deg);}
+    from { transform: scale(2) rotate(0deg);}
+    to { transform: scale(2) rotate(360deg);}
 }
