@@ -82,8 +82,8 @@ function draw_cloud(loan_data) {
 }
 
 
-function draw_box(a, yScale, val, id){
-  
+function draw_box(a, yScale, val, id, fmt){
+
   "use strict";
   
   $("#" + id).html("");
@@ -168,6 +168,20 @@ function draw_box(a, yScale, val, id){
     .attr("transform", "translate(" + (total_width - 13) + "," + (yScale(val.q2) + 5) + ")")
     .text(d3.format(".0%")(val.q2));
 
+  if (fmt) {
+    var bar = d3.select("g.bar.filtered")[0][0];
+
+    var lower_limit = bar.__data__.x,
+        upper_limit = lower_limit + bar.__data__.dx;
+
+    d3.select("#box1>svg>g").append("text")
+      .attr("id", "var-range")
+      .attr("class", "var-range text")
+      .attr("text-anchor", "middle")
+      .attr("transform", "translate("+ total_width/2 + ",20)")
+      .text(d3.format(fmt)(lower_limit) + " - " + d3.format(fmt)(upper_limit));
+  }
+
   $("svg line").tooltip({"data-toggle": "tooltip", "container": "body"});
   $("svg rect").tooltip({"data-toggle": "tooltip", "container": "body"});
 
@@ -243,7 +257,9 @@ function draw_hist(vals, label, range) {
     .attr("x", 1)
     .attr("width", (x(data[1].x) - x(data[0].x)) - 1)
     .attr("height", function(d) { return height - y(d.y); })
-    .on("click", filter_);
+    .on("click", filter_selected);
+
+    return data;
 
 }
 
@@ -253,6 +269,8 @@ function page_0() {
   "use strict";
 
   $("#box1").html("");
+  d3.selectAll(".filtered").classed("filtered", false);
+
  
   var val = summary(points),
       term = [1, 3, 5],
@@ -479,7 +497,6 @@ function page_5() {
 }
 
 
-
 function total_payment(R, N) {
   /**
    * calculate the total ammount paid
@@ -538,7 +555,7 @@ function summary(a) {
 }
 
 
-function filter_() {
+function filter_selected() {
   
   d3.selectAll("circle")
     .classed("filtered", false)
@@ -546,22 +563,26 @@ function filter_() {
   d3.selectAll("g.bar.filtered")
     .classed("filtered", false);
 
+
   var bar = this.parentElement.__data__;
   
-    var lower_limit = bar.x,
-        upper_limit = lower_limit + bar.dx;
+  var lower_limit = bar.x,
+      dx = bar.dx,
+      upper_limit = lower_limit + dx,
+      fmt = dx > 1 ? ".0f" : ".2f";
 
-    var filtered = points.filter(function(d) {
-      return  (d[var_name] >= lower_limit) &&
-              (d[var_name] <= upper_limit);
-    });
+  var filtered = points.filter(function(d) {
+    return  (d[var_name] >= lower_limit) &&
+            (d[var_name] <= upper_limit);
+  });
 
-    var val = summary(filtered);
-    
-    filtered.attr("class", "filtered");
-    filtered.call(draw_box, yScale, val, "box1");
+  var val = summary(filtered);
+  
+  filtered.attr("class", "filtered");
 
-    this.parentElement.setAttribute("class", "bar filtered");
+  this.parentElement.setAttribute("class", "bar filtered");
+  
+  filtered.call(draw_box, yScale, val, "box1", fmt);
 
 }
 
