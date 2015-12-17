@@ -237,9 +237,8 @@ function draw_hist(vals, label, range) {
   hist.append("text")
     .attr("class", "label label-default text")
     .attr("text-anchor", "left")
-    .attr("transform", "translate(125,5)")
-    .text("Click on the bar to explore")
-    .style("font-size", "10px;");
+    .attr("transform", "translate(130,0)")
+    .text("Click on the bar to explore");
   
   hist.append("text")
     .attr("class", "axis xaxis text")
@@ -259,7 +258,13 @@ function draw_hist(vals, label, range) {
     .attr("height", function(d) { return height - y(d.y); })
     .on("click", filter_selected);
 
-    return data;
+  bar.append("text")
+    .attr("class", "label label-default text frequency")
+    .attr("text-anchor", "left")
+    .attr("transform", "translate(2,-2)")
+    .text(function(d) {return d3.format(".0%")(d.length / vals.length)});
+    
+  return data;
 
 }
 
@@ -269,6 +274,7 @@ function page_0() {
   "use strict";
 
   $("#box1").html("");
+  d3.selectAll(".filtered").classed("filtered", false);
   d3.selectAll(".filtered").classed("filtered", false);
 
  
@@ -368,8 +374,8 @@ function page_1() {
   
   var data = draw_hist(creditScores, "Credit Scores");
 
-  $("g.bar :eq(2)").d3Click();
-
+  $("g.bar :eq(0)").d3Click();
+  
 }
 
 
@@ -556,6 +562,11 @@ function summary(a) {
 
 
 function filter_selected() {
+  /**
+   * following a "click" event on a histogram's bar,
+   * filter the points and the clicked bar
+   * to change its class
+   **/
   
   d3.selectAll("circle")
     .classed("filtered", false)
@@ -563,13 +574,14 @@ function filter_selected() {
   d3.selectAll("g.bar.filtered")
     .classed("filtered", false);
 
+  this.parentElement.setAttribute("class", "bar filtered");
 
   var bar = this.parentElement.__data__;
   
   var lower_limit = bar.x,
       dx = bar.dx,
       upper_limit = lower_limit + dx,
-      fmt = dx > 1 ? ".0f" : ".2f";
+      fmt = dx > 1 ? ".0f" : ".1f";
 
   var filtered = points.filter(function(d) {
     return  (d[var_name] >= lower_limit) &&
@@ -577,12 +589,16 @@ function filter_selected() {
   });
 
   var val = summary(filtered);
-  
-  filtered.attr("class", "filtered");
 
   this.parentElement.setAttribute("class", "bar filtered");
   
+  filtered.attr("class", "filtered");
+ 
   filtered.call(draw_box, yScale, val, "box1", fmt);
+
+  d3.select("g.bar.filtered text")
+    .classed("filtered", true);
+
 
 }
 

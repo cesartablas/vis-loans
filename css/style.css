@@ -27,6 +27,23 @@ h1 {
   font-weight: 300;
 }
 
+text.axis, text.frequency, .var-range {
+  stroke: #01665e;
+  stroke-width: 0.3;
+}
+
+text.frequency {
+  opacity: 0;
+}
+
+#facts > svg > g > g.bar.filtered > text {
+  opacity: 1;
+}
+/*.var-range {
+  stroke: #01665e;
+  stroke-width: 0.5;
+}*/
+
 .punchline {
   font-weight: 400;
 }
