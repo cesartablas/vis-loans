@@ -276,6 +276,7 @@ function page_0() {
   $("#box1").html("");
   d3.selectAll(".filtered").classed("filtered", false);
   d3.selectAll(".filtered").classed("filtered", false);
+  $("#dropdown").html("");
 
  
   var val = summary(points),
@@ -339,7 +340,7 @@ function page_0() {
   "</tbody>"+
   "</table>");
 
-  $("nav ul").html("<li class='next'><button class='btn btn-default' type='button' onclick='page_1()'><span aria-hidden='true'></span>next &rarr;</button></li>");
+  $("#pager").html("<li class='next'><button class='btn btn-default' type='button' onclick='page_1()'><span aria-hidden='true'></span>Next &rarr;</button></li>");
 
   $("#strategies").attr("data-content", "&bull; shorter term requires higher payments\n&bull; shorter term translates into less money paid back\n&bull; lower rate means less money paid back");
   
@@ -366,7 +367,11 @@ function page_1() {
 
   $("#references").attr("data-content", "My previous <a target='_blank' href='https://cesartablas.github.io/eda-loans/'>Exploratory Data Analysis</a>\n");
 
-  $("nav ul").html("<li class='previous'><button class='btn btn-default' type='button' onclick='page_0()'><span aria-hidden='true'></span>&larr; previous</button></li><li class='next'><button class='btn btn-default' type='button' onclick='page_2()'><span aria-hidden='true'></span>next &rarr;</button></li>");
+  $("nav ul").html("<li class='previous'><button class='btn btn-default' type='button' onclick='page_0()'><span aria-hidden='true'></span>&larr; Previous</button></li>&nbsp;<li class='next'><button class='btn btn-default' type='button' onclick='page_2()' disabled='disabled'><span aria-hidden='true'></span>Next &rarr;</button></li>");
+
+  $("#dropdown").html("<button id='dLabel' class='btn btn-default btn-sm'type='button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>Explore Interaction with Other Variables <span class='caret'> </span></button><ul id='explore' class='dropdown-menu' aria-labelledby='dLabel'></ul>");
+ 
+  $("#explore").html("<li><a onclick='page_1()'>Credit Score</a></li><li class='divider'></li><li><a onclick='totalInquiries()'>Inquiries</a></li><li><a onclick='bankcardUtilization()'>Bankcard Utilization</a></li><li><a onclick='debtToIncomeRatio()'>Debt to Income Ratio</a></li><li><a onclick='currentCreditLines()'>Credit Lines</a></li>");
 
   window.var_name = "CreditScoreRangeUpper";
 
@@ -379,7 +384,7 @@ function page_1() {
 }
 
 
-function page_2() {
+function debtToIncomeRatio() {
 
   "use strict";
 
@@ -397,7 +402,7 @@ function page_2() {
 
   $("#references").attr("data-content", "My previous <a target='_blank' href='https://cesartablas.github.io/eda-loans/'>Exploratory Data Analysis</a>\n");
 
-  $("nav ul").html("<li class='previous'><button class='btn btn-default' type='button' onclick='page_1()'><span aria-hidden='true'></span>&larr; previous</button></li><li class='next'><button class='btn btn-default' type='button' onclick='page_3()'><span aria-hidden='true'></span>next &rarr;</button></li>");
+  $("#explore").html("<li><a onclick='page_1()'>Credit Score</a></li><li><a onclick='totalInquiries()'>Inquiries</a></li><li><a onclick='bankcardUtilization()'>Bankcard Utilization</a></li><li><a onclick='debtToIncomeRatio()'>Debt to Income Ratio</a></li><li><a onclick='currentCreditLines()'>Credit Lines</a></li>");
 
   window.var_name = "DebtToIncomeRatio";
 
@@ -410,7 +415,7 @@ function page_2() {
 }
 
 
-function page_3() {
+function totalInquiries() {
 
   "use strict";
 
@@ -428,7 +433,7 @@ function page_3() {
 
   $("#references").attr("data-content", "My previous <a target='_blank' href='https://cesartablas.github.io/eda-loans/'>Exploratory Data Analysis</a>\n");
 
-  $("nav ul").html("<li class='previous'><button class='btn btn-default' type='button' onclick='page_2()'><span aria-hidden='true'></span>&larr; previous</button></li><li class='next'><button class='btn btn-default' type='button' onclick='page_4()'><span aria-hidden='true'></span>next &rarr;</button></li>");
+  $("#explore").html("<li><a onclick='page_1()'>Credit Score</a></li><li><a onclick='totalInquiries()'>Inquiries</a></li><li><a onclick='bankcardUtilization()'>Bankcard Utilization</a></li><li><a onclick='debtToIncomeRatio()'>Debt to Income Ratio</a></li><li><a onclick='currentCreditLines()'>Credit Lines</a></li>");
 
   window.var_name = "TotalInquiries";
 
@@ -436,12 +441,12 @@ function page_3() {
 
   var data = draw_hist(ratio, "Total Inquiries", [0, 20]);
 
-  $("g.bar :eq(5)").d3Click();
+  $("g.bar :eq(0)").d3Click();
 
 }
 
 
-function page_4() {
+function bankcardUtilization() {
 
   "use strict";
 
@@ -459,7 +464,7 @@ function page_4() {
 
   $("#references").attr("data-content", "My previous <a target='_blank' href='https://cesartablas.github.io/eda-loans/'>Exploratory Data Analysis</a>\n");
 
-  $("nav ul").html("<li class='previous'><button class='btn btn-default' type='button' onclick='page_3()'><span aria-hidden='true'></span>&larr; previous</button></li><li class='next'><button class='btn btn-default' type='button' onclick='page_5()'><span aria-hidden='true'></span>next &rarr;</button></li>");
+  $("#explore").html("<li><a onclick='page_1()'>Credit Score</a></li><li><a onclick='totalInquiries()'>Inquiries</a></li><li><a onclick='bankcardUtilization()'>Bankcard Utilization</a></li><li><a onclick='debtToIncomeRatio()'>Debt to Income Ratio</a></li><li><a onclick='currentCreditLines()'>Credit Lines</a></li>");
 
   window.var_name = "BankcardUtilization";
 
@@ -467,12 +472,12 @@ function page_4() {
 
   var data = draw_hist(ratio, "Bankcard Utilization", [0, 1]);
 
-  $("g.bar :eq(2)").d3Click();
+  $("g.bar :eq(0)").d3Click();
 
 }
 
 
-function page_5() {
+function currentCreditLines() {
 
   "use strict";
 
@@ -490,15 +495,21 @@ function page_5() {
 
   $("#references").attr("data-content", "My previous <a target='_blank' href='https://cesartablas.github.io/eda-loans/'>Exploratory Data Analysis</a>\n");
 
-  $("nav ul").html("<li class='previous'><button class='btn btn-default' type='button' onclick='page_4()'><span aria-hidden='true'></span>&larr; previous</button></li><li class='next'><button class='btn btn-default' type='button' onclick='page_6()'><span aria-hidden='true'></span>next &rarr;</button></li>");
+  $("#explore").html("<li><a onclick='page_1()'>Credit Score</a></li><li><a onclick='totalInquiries()'>Inquiries</a></li><li><a onclick='bankcardUtilization()'>Bankcard Utilization</a></li><li><a onclick='debtToIncomeRatio()'>Debt to Income Ratio</a></li><li><a onclick='currentCreditLines()'>Credit Lines</a></li>");
 
   window.var_name = "CurrentCreditLines";
 
   var ratio = pl.map(function(d) {return +d[var_name];});
 
-  var data = draw_hist(ratio, "Credit Lines", [0, 30]);
+  var data = draw_hist(ratio, "Credit Lines", [0, 20]);
 
   $("g.bar :eq(0)").d3Click();
+
+}
+
+
+function page_2() {
+  $("body").html("<p class='jumbotron'>under construction</p>");
 
 }
 
