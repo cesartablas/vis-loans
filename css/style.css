@@ -68,7 +68,7 @@ h1 {
   stroke: #01665e ;
   stroke-width: 0.5;
   font-size: 1em;
-  font-weight: 100;
+  font-weight: 300;
 }
 
 .tick line{
@@ -133,11 +133,16 @@ circle.filtered {
   opacity: 1;
 }
 
-
 #box0 rect {
   fill: #f6e8c3;
   stroke: #543005;
   stroke-width: 1;
+}
+
+#box0 rect:hover {
+  fill: #f6e8c3;
+  stroke: #bf812d;
+  stroke-width: 3;
 }
 
 #box0 line.center {
@@ -154,10 +159,19 @@ circle.filtered {
   stroke-width: 3;
 }
 
+#box0 line.whisker:hover {
+  stroke: #bf812d;
+  stroke-width: 5;
+}
 
 #box0 line.median {
   stroke: #35978f;
   stroke-width: 3;
+}
+
+#box0 line.median:hover {
+  stroke: #003c30;
+  stroke-width:5;
 }
 
 #box0 .outlier {
@@ -166,11 +180,16 @@ circle.filtered {
   stroke-width: 1;
 }
 
-
 #box1 rect {
   fill: #c7eae5;
   stroke: #003c30;
   stroke-width: 0.7;
+}
+
+#box1 rect:hover {
+  fill: #c7eae5;
+  stroke: #35978f;
+  stroke-width: 3;
 }
 
 #box1 line.center {
@@ -183,10 +202,19 @@ circle.filtered {
   stroke-width: 3;
 }
 
+#box1 line.whisker:hover {
+  stroke: #35978f;
+  stroke-width: 5;
+}
 
 #box1 line.median {
   stroke: #bf812d;
   stroke-width: 2.5px
+}
+
+#box1 line.median:hover {
+  stroke: #543005;
+  stroke-width:5;
 }
 
 #box1 text.median {
@@ -204,21 +232,15 @@ circle.filtered {
   shape-rendering: crispEdges;
 }
 
+.bar rect:hover {
+  fill: #80cdc1;
+  shape-rendering: crispEdges;
+}
+
 .filtered rect {
   fill: #35978f;
   shape-rendering: crispEdges;
 }
-
-/*.bar text {
-  stroke: #003c30;
-}
-
-.axis path, .axis line {
-  fill: none;
-  stroke: #000;
-  shape-rendering: crispEdges;
-}
-*/
 
 #spinner{
   margin: 200px auto;
