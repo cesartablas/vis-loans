@@ -27,6 +27,19 @@ h1 {
   font-weight: 300;
 }
 
+text.axis, text.frequency, .var-range {
+  stroke: #01665e;
+  stroke-width: 0.3;
+}
+
+text.frequency {
+  opacity: 0;
+}
+
+#facts > svg > g > g.bar.filtered > text {
+  opacity: 1;
+}
+
 .punchline {
   font-weight: 400;
 }
@@ -93,7 +106,14 @@ th, tr, td {
   float: left;
   position: relative;
     /* outline: red solid 1px; */
+<<<<<<< HEAD
 }
+||||||| merged common ancestors
+
+}
+=======
+}   
+>>>>>>> iter3
 
 .tooltip {
   white-space: pre;
@@ -125,32 +145,54 @@ th, tr, td {
     left: 0;
 }*/
 
-/*
- * the color scale
+#dLabel, #dLabel:active, #dLabel:visited {
+  color: #003c30;
+  font-weight: 300;
+  background-color: #c7eae5;
+  border-color: #003c30;
+}
+
+#dLabel:hover {
+  color: #543005;
+  font-weight: 400;
+  background-color: #f6e8c3;
+  border-color: #543005;
+}
+
+#dropdown {
+  text-align: center;
+}
+
+#explore > li > a {
+  font-weight: 300;
+  color: #543005;
+}
+
+/* the color scale
 #543005  dark brown
 #8c510a
 #bf812d
 #dfc27d
 #f6e8c3
-
+         light
 #c7eae5
 #80cdc1
 #35978f
 #01665e
-#003c30  dark blue
-*/
+#003c30  dark blue */
+
 circle {
   fill: #f6e8c3;
   stroke: #dfc27d;
   stroke-width: 0.7;
-  opacity: 0.2;
+  opacity: 0.4;
 }
 
 circle.filtered {
   fill: #80cdc1;
   stroke: #003c30;
   stroke-width: 0.7;
-  opacity: 1;
+  opacity: .6;
 }
 
 circle:hover {
@@ -266,6 +308,21 @@ circle:hover {
   shape-rendering: crispEdges;
 }
 
+/*.bar text {
+  stroke: #003c30;
+}
+
+.axis path, .axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+*/
+
+/* animated loading spinner
+ * http://www.bootply.com/128062
+ * */
+
 #spinner{
   margin: 200px auto;
 }
@@ -280,6 +337,6 @@ circle:hover {
 }
 
 @keyframes spin {
-    from { transform: scale(1) rotate(0deg);}
-    to { transform: scale(1) rotate(360deg);}
+    from { transform: scale(2) rotate(0deg);}
+    to { transform: scale(2) rotate(360deg);}
 }

@@ -1,13 +1,17 @@
+/**
+ * Visualization: Insights from a Cloud of Loans
+ *
+ * by Cesar Tabalas
+ * December 2015
+ *
+ * */
+
 function draw_cloud(loan_data) {
   
   "use strict";
   
   $("#spinner").remove();
 
-  /*
-    window.pl = loan_data.filter(function(d) {
-    return d["ProsperRating (numeric)"] != "";});
-  */
   window.pl = loan_data;
   
   var total_width = 850,
@@ -82,8 +86,8 @@ function draw_cloud(loan_data) {
 }
 
 
-function draw_box(a, yScale, val, id){
-  
+function draw_box(a, yScale, val, id, fmt){
+
   "use strict";
   
   $("#" + id).html("");
@@ -169,13 +173,27 @@ function draw_box(a, yScale, val, id){
     .attr("transform", "translate(" + (total_width - 13) + "," + (yScale(val.q2) + 5) + ")")
     .text(d3.format(".0%")(val.q2));
 
+  if (fmt) {
+    var bar = d3.select("g.bar.filtered")[0][0];
+
+    var lower_limit = bar.__data__.x,
+        upper_limit = lower_limit + bar.__data__.dx;
+
+    d3.select("#box1>svg>g").append("text")
+      .attr("id", "var-range")
+      .attr("class", "var-range text")
+      .attr("text-anchor", "middle")
+      .attr("transform", "translate("+ total_width/2 + ",20)")
+      .text(d3.format(fmt)(lower_limit) + " - " + d3.format(fmt)(upper_limit));
+  }
+
   $("svg line").tooltip({"data-toggle": "tooltip", "container": "body"});
   $("svg rect").tooltip({"data-toggle": "tooltip", "container": "body"});
 
 }
 
 
-function draw_hist(values, label) {
+function draw_hist(vals, label, range) {
   
   "use strict";
   
@@ -187,13 +205,18 @@ function draw_hist(values, label) {
       width = total_width - margin.left - margin.right,
       height = total_height - margin.top - margin.bottom;
 
+  if (range) {
+    vals = vals.filter(function(d) {
+      return d>=range[0] && d<=range[1]});
+  }
+
   var x = d3.scale.linear()
-    .domain([d3.min(values), d3.max(values)])
+    .domain([d3.min(vals), d3.max(vals)])
     .range([0, width])
     .nice();
 
   var data = d3.layout.histogram()
-    .bins(x.ticks(10))(values);
+    .bins(x.ticks(10))(vals);
 
   var y = d3.scale.linear()
     .domain([0, d3.max(data, function(d) { return d.y; })])
@@ -219,7 +242,7 @@ function draw_hist(values, label) {
   hist.append("text")
     .attr("class", "label label-default text")
     .attr("text-anchor", "left")
-    .attr("transform", "translate(125,5)")
+    .attr("transform", "translate(130,0)")
     .text("Click on the bar to explore");
   
   hist.append("text")
@@ -238,9 +261,14 @@ function draw_hist(values, label) {
     .attr("x", 1)
     .attr("width", (x(data[1].x) - x(data[0].x)) - 1)
     .attr("height", function(d) { return height - y(d.y); })
-    .on("click", filter_);
+    .on("click", filter_selected);
 
-
+  bar.append("text")
+    .attr("class", "label label-default text frequency")
+    .attr("text-anchor", "left")
+    .attr("transform", "translate(2,-2)")
+    .text(function(d) {return d3.format(".0%")(d.length / vals.length)});
+    
   return data;
 
 }
@@ -251,6 +279,10 @@ function page_0() {
   "use strict";
 
   $("#box1").html("");
+  d3.selectAll(".filtered").classed("filtered", false);
+  d3.selectAll(".filtered").classed("filtered", false);
+  $("#dropdown").html("");
+
  
   var val = summary(points),
       term = [1, 3, 5],
@@ -311,7 +343,7 @@ function page_0() {
   "</tbody>"+
   "</table>");
 
-  $("nav ul").html("<li class='next'><button class='btn btn-default' type='button' onclick='page_1()'><span aria-hidden='true'></span>Next  &rarr;</button></li>");
+  $("#pager").html("<li class='next'><button class='btn btn-default' type='button' onclick='page_1()'><span aria-hidden='true'></span>Next &rarr;</button></li>");
 
   $("#dataset").attr("data-content",
   "<a target='_blank' href='http://www.prosper.com/'>Prosper Marketplace Inc.</a> is an intermediary of peer to peer lending in the US.<br>In this financing model, the borrower submits a loan application, the investors<br>fund the loan, and the intermediary conducts the process of loaning and<br>collecting the money which is paid back to the investors.<br><br>This dataset contains 114K datapoints about Prosper loans given between<br>Nov 2005 and Mar 2014. Each datapoint has 81 variables.<br><br>For this visualization the dataset has been truncated to about 83K datapoints<br>that use the new Prosper Rating (2009), and to only the 6 variables used.");
@@ -327,7 +359,7 @@ function page_1() {
 
   "use strict";
   
-  $("#tale").html("The Credit Score represents a person's creditworthiness &mdash;their likelihood to pay on time. And it's used by lenders to determine if someone qualifies for credit, and if so, how much interest they will charge them to compensate for the risk.<br><br><span class='punchline'>Explore how Credit Score and other variables influence the Interest Rate.</span>");
+  $("#tale").html("The Credit Score represents a person's creditworthiness &mdash;their likelihood to pay on time. And it is used by lenders to determine if someone qualifies for credit, and if so, how much interest they will charge them to compensate for the risk.<br><span class='punchline'>Explore how Credit Score and other variables influence the Interest Rate...</span>");
 
   $("#facts").append("<h4 class='label label-default'>Explore by clicking on the bars</h4>");
 
@@ -341,13 +373,149 @@ function page_1() {
 
   $("#references").attr("data-content", "My previous <a target='_blank' href='https://cesartablas.github.io/eda-loans/'>Exploratory Data Analysis</a>\n Reader's Digest <a target='_blank' href='http://www.rd.com/advice/saving-money/your-credit-score-the-magic-money-number-explained/'>Your Credit Score: The Magic Number Explained</a>");
 
-  $("nav ul").html("<li class='previous'><button class='btn btn-default' type='button' onclick='page_0()'><span aria-hidden='true'></span>&larr; Previous</button></li> <li class='next'><button class='btn btn-default' type='button' onclick='page_3()'><span aria-hidden='true'></span>Next &rarr;</button></li>");
+  $("nav ul").html("<li class='previous'><button class='btn btn-default' type='button' onclick='page_0()'><span aria-hidden='true'></span>&larr; Previous</button></li>&nbsp;<li class='next'><button class='btn btn-default' type='button' onclick='page_2()' disabled='disabled'><span aria-hidden='true'></span>Next &rarr;</button></li>");
 
-  var creditScores = pl.map(function(d) {return +d.CreditScoreRangeUpper;});
+  $("#dropdown").html("<button id='dLabel' class='btn btn-default btn-sm'type='button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>Explore Interaction with Other Variables <span class='caret'> </span></button><ul id='explore' class='dropdown-menu' aria-labelledby='dLabel'></ul>");
+ 
+  $("#explore").html("<li><a onclick='page_1()'>Credit Score</a></li><li class='divider'></li><li><a onclick='totalInquiries()'>Inquiries</a></li><li><a onclick='bankcardUtilization()'>Bankcard Utilization</a></li><li><a onclick='debtToIncomeRatio()'>Debt to Income Ratio</a></li><li><a onclick='currentCreditLines()'>Credit Lines</a></li>");
 
+  window.var_name = "CreditScoreRangeUpper";
+
+  var creditScores = pl.map(function(d) {return +d[var_name];});
+  
   var data = draw_hist(creditScores, "Credit Scores");
 
-  $("g.bar :first").d3Click();
+  $("g.bar :eq(0)").d3Click();
+  
+}
+
+
+function debtToIncomeRatio() {
+
+  "use strict";
+
+  $("#box1").html("");
+  d3.selectAll(".filtered").classed("filtered", false);
+
+  $("#tale").html("the credit score represents a lender's creditworthiness and the interest rate is a reward for the risk of lending him the money<br><span class='punchline'>what strategies can we use to increase our credit score ?</span>");
+
+  $("#facts").append("<h4 class='label label-default'>Explore by clicking on the bars</h4>");
+
+  $("#strategies").attr("data-content", "&bull; the higher the credit scores the lower the interest rate");
+  
+  $("#dataset").attr("data-content",
+  "Distribution of Credit Scores<br><img src='Rplot01.png' alt='Credit Scores Histogram' height='100' width='200'><br>Prosper has their own Rating based on the\ncredit scores reported by the different agencies.\n\nFor this visualization I chose the variable\nCreditScoreRangeUpper as the Credit Score");
+
+  $("#references").attr("data-content", "My previous <a target='_blank' href='https://cesartablas.github.io/eda-loans/'>Exploratory Data Analysis</a>\n");
+
+  $("#explore").html("<li><a onclick='page_1()'>Credit Score</a></li><li><a onclick='totalInquiries()'>Inquiries</a></li><li><a onclick='bankcardUtilization()'>Bankcard Utilization</a></li><li><a onclick='debtToIncomeRatio()'>Debt to Income Ratio</a></li><li><a onclick='currentCreditLines()'>Credit Lines</a></li>");
+
+  window.var_name = "DebtToIncomeRatio";
+
+  var ratio = pl.map(function(d) {return +d[var_name];});
+
+  var data = draw_hist(ratio, "Debt to Income Ratio", [0, 1]);
+
+  $("g.bar :eq(0)").d3Click();
+
+}
+
+
+function totalInquiries() {
+
+  "use strict";
+
+  $("#box1").html("");
+  d3.selectAll(".filtered").classed("filtered", false);
+
+  $("#tale").html("the credit score represents a lender's creditworthiness and the interest rate is a reward for the risk of lending him the money<br><span class='punchline'>what strategies can we use to increase our credit score ?</span>");
+
+  $("#facts").append("<h4 class='label label-default'>Explore by clicking on the bars</h4>");
+
+  $("#strategies").attr("data-content", "&bull; the higher the credit scores the lower the interest rate");
+  
+  $("#dataset").attr("data-content",
+  "Distribution of Credit Scores<br><img src='Rplot01.png' alt='Credit Scores Histogram' height='100' width='200'><br>Prosper has their own Rating based on the\ncredit scores reported by the different agencies.\n\nFor this visualization I chose the variable\nCreditScoreRangeUpper as the Credit Score");
+
+  $("#references").attr("data-content", "My previous <a target='_blank' href='https://cesartablas.github.io/eda-loans/'>Exploratory Data Analysis</a>\n");
+
+  $("#explore").html("<li><a onclick='page_1()'>Credit Score</a></li><li><a onclick='totalInquiries()'>Inquiries</a></li><li><a onclick='bankcardUtilization()'>Bankcard Utilization</a></li><li><a onclick='debtToIncomeRatio()'>Debt to Income Ratio</a></li><li><a onclick='currentCreditLines()'>Credit Lines</a></li>");
+
+  window.var_name = "TotalInquiries";
+
+  var ratio = pl.map(function(d) {return +d[var_name];});
+
+  var data = draw_hist(ratio, "Total Inquiries", [0, 20]);
+
+  $("g.bar :eq(0)").d3Click();
+
+}
+
+
+function bankcardUtilization() {
+
+  "use strict";
+
+  $("#box1").html("");
+  d3.selectAll(".filtered").classed("filtered", false);
+
+  $("#tale").html("the credit score represents a lender's creditworthiness and the interest rate is a reward for the risk of lending him the money<br><span class='punchline'>what strategies can we use to increase our credit score ?</span>");
+
+  $("#facts").append("<h4 class='label label-default'>Explore by clicking on the bars</h4>");
+
+  $("#strategies").attr("data-content", "&bull; the higher the credit scores the lower the interest rate");
+  
+  $("#dataset").attr("data-content",
+  "Distribution of Credit Scores<br><img src='Rplot01.png' alt='Credit Scores Histogram' height='100' width='200'><br>Prosper has their own Rating based on the\ncredit scores reported by the different agencies.\n\nFor this visualization I chose the variable\nCreditScoreRangeUpper as the Credit Score");
+
+  $("#references").attr("data-content", "My previous <a target='_blank' href='https://cesartablas.github.io/eda-loans/'>Exploratory Data Analysis</a>\n");
+
+  $("#explore").html("<li><a onclick='page_1()'>Credit Score</a></li><li><a onclick='totalInquiries()'>Inquiries</a></li><li><a onclick='bankcardUtilization()'>Bankcard Utilization</a></li><li><a onclick='debtToIncomeRatio()'>Debt to Income Ratio</a></li><li><a onclick='currentCreditLines()'>Credit Lines</a></li>");
+
+  window.var_name = "BankcardUtilization";
+
+  var ratio = pl.map(function(d) {return +d[var_name];});
+
+  var data = draw_hist(ratio, "Bankcard Utilization", [0, 1]);
+
+  $("g.bar :eq(0)").d3Click();
+
+}
+
+
+function currentCreditLines() {
+
+  "use strict";
+
+  $("#box1").html("");
+  d3.selectAll(".filtered").classed("filtered", false);
+
+  $("#tale").html("the credit score represents a lender's creditworthiness and the interest rate is a reward for the risk of lending him the money<br><span class='punchline'>what strategies can we use to increase our credit score ?</span>");
+
+  $("#facts").append("<h4 class='label label-default'>Explore by clicking on the bars</h4>");
+
+  $("#strategies").attr("data-content", "&bull; the higher the credit scores the lower the interest rate");
+  
+  $("#dataset").attr("data-content",
+  "Distribution of Credit Scores<br><img src='Rplot01.png' alt='Credit Scores Histogram' height='100' width='200'><br>Prosper has their own Rating based on the\ncredit scores reported by the different agencies.\n\nFor this visualization I chose the variable\nCreditScoreRangeUpper as the Credit Score");
+
+  $("#references").attr("data-content", "My previous <a target='_blank' href='https://cesartablas.github.io/eda-loans/'>Exploratory Data Analysis</a>\n");
+
+  $("#explore").html("<li><a onclick='page_1()'>Credit Score</a></li><li><a onclick='totalInquiries()'>Inquiries</a></li><li><a onclick='bankcardUtilization()'>Bankcard Utilization</a></li><li><a onclick='debtToIncomeRatio()'>Debt to Income Ratio</a></li><li><a onclick='currentCreditLines()'>Credit Lines</a></li>");
+
+  window.var_name = "CurrentCreditLines";
+
+  var ratio = pl.map(function(d) {return +d[var_name];});
+
+  var data = draw_hist(ratio, "Credit Lines", [0, 20]);
+
+  $("g.bar :eq(0)").d3Click();
+
+}
+
+
+function page_2() {
+  $("body").html("<p class='jumbotron'>under construction</p>");
 
 }
 
@@ -410,7 +578,12 @@ function summary(a) {
 }
 
 
-function filter_() {
+function filter_selected() {
+  /**
+   * following a "click" event on a histogram's bar,
+   * filter the points and the clicked bar
+   * to change its class
+   **/
   
   d3.selectAll("circle")
     .classed("filtered", false)
@@ -418,28 +591,40 @@ function filter_() {
   d3.selectAll("g.bar.filtered")
     .classed("filtered", false);
 
+  this.parentElement.setAttribute("class", "bar filtered");
+
   var bar = this.parentElement.__data__;
   
-    var lower_limit = bar.x,
-        upper_limit = lower_limit + bar.dx;
+  var lower_limit = bar.x,
+      dx = bar.dx,
+      upper_limit = lower_limit + dx,
+      fmt = dx > 1 ? ".0f" : ".1f";
 
-    var filtered = points.filter(function(d) {
-      return  (d.CreditScoreRangeUpper >= lower_limit) &&
-              (d.CreditScoreRangeUpper <= upper_limit);
-    });
+  var filtered = points.filter(function(d) {
+    return  (d[var_name] >= lower_limit) &&
+            (d[var_name] <= upper_limit);
+  });
 
-    var val = summary(filtered);
-    
-    filtered.attr("class", "filtered");
-    filtered.call(draw_box, yScale, val, "box1");
+  var val = summary(filtered);
 
-    this.parentElement.setAttribute("class", "bar filtered");
+  this.parentElement.setAttribute("class", "bar filtered");
+  
+  filtered.attr("class", "filtered");
+ 
+  filtered.call(draw_box, yScale, val, "box1", fmt);
+
+  d3.select("g.bar.filtered text")
+    .classed("filtered", true);
+
 
 }
 
 
 jQuery.fn.d3Click = function () {
-  /*http://stackoverflow.com/a/11180172*/
+  /**
+   * function to simulate a click event on a d3 element
+   * http://stackoverflow.com/a/11180172
+   * */
   this.each(function (i, e) {
     var evt = document.createEvent("MouseEvents");
     evt.initMouseEvent("click", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
