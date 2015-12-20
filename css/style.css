@@ -35,6 +35,18 @@ h1 {
   color: red;
 }
 
+.row-label {
+  font-weight: bold;
+}
+
+th, tr, td {
+  text-align: right;
+}
+
+.stat {
+  text-align: left;
+}
+
 .btn, .btn:active, .btn:visited {
   color: #543005;
   font-weight: 300;
@@ -61,7 +73,6 @@ h1 {
   height: 350px;
   position: relative;
     /* outline: red solid 1px; */
-
 }
 
 #cloud .text, .tick, .domain {
@@ -82,7 +93,6 @@ h1 {
   float: left;
   position: relative;
     /* outline: red solid 1px; */
-
 }
 
 .tooltip {
@@ -96,7 +106,7 @@ h1 {
 
 .popover {
   white-space: pre;
-  max-width: none;
+  max-width: 500px;
   font-family: 'Lato', sans-serif;
   font-weight: 300;
   color: 003c30;
@@ -105,8 +115,9 @@ h1 {
 .popover-title {
   font-family: 'Lato', sans-serif;
   font-weight: 400;
-  color: 003c30;
+  color: #003c30;
 }
+
 
 /*svg {
     position: relative;
@@ -140,6 +151,10 @@ circle.filtered {
   stroke: #003c30;
   stroke-width: 0.7;
   opacity: 1;
+}
+
+circle:hover {
+  
 }
 
 #box0 rect {

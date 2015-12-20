@@ -4,9 +4,12 @@ function draw_cloud(loan_data) {
   
   $("#spinner").remove();
 
-  window.pl = loan_data.filter(function(d) {
+  /*
+    window.pl = loan_data.filter(function(d) {
     return d["ProsperRating (numeric)"] != "";});
-
+  */
+  window.pl = loan_data;
+  
   var total_width = 850,
       total_height = 350,
       margin = {top:10, right:10, bottom:10, left:100},
@@ -46,7 +49,7 @@ function draw_cloud(loan_data) {
     .attr("class", "axis yaxis text")
     .attr("text-anchor", "middle")
     .attr("transform", "translate("+ (margin.left/2) +","+(height/2+margin.top)+")rotate(-90)")
-    .text("Borrower APR");
+    .text("Borrower Interest Rate");
 
   var div = d3.select("body").append("div")
     .attr("class", "tooltip")
@@ -63,8 +66,13 @@ function draw_cloud(loan_data) {
       .attr("cy", function(d) {return yScale(d.BorrowerAPR);})
       .attr("container", "body")
       .attr("title", function(d) {
-        return "Borrower APR: " + d3.format(".1%")(d.BorrowerAPR) +
-        "\n Credit Score: " + d.CreditScoreRangeUpper
+        return "Interest Rate: " + d3.format(".1%")(d.BorrowerAPR)
+        /* +
+        "<hr/>\n Credit Score: " + d3.format(".0f")(d.CreditScoreRangeUpper) +
+        "\n Inquiries: " + d3.format(".0f")(d.TotalInquiries) +
+        "\n Debt to Income Ratio: " + d3.format(".1f")(d.DebtToIncomeRatio) +
+        "\n Bankcard Utilization: " + d3.format(".1f")(d.BankcardUtilization) +
+        "\n Credit Lines: " + d3.format(".0f")(d.CurrentCreditLines)*/
         });
 
   $("svg circle").tooltip({"data-toggle": "tooltip", "container": "body"});
@@ -105,6 +113,7 @@ function draw_box(a, yScale, val, id){
       .attr("y1", function(d) {return yScale(d);})
       .attr("x2", width + margin.left)
       .attr("y2", function(d) {return yScale(d);})
+      .attr("class", "whisker")
       .attr("class", "whisker")
       .attr("container", "body")
       .attr("title", function(d) {return d3.format(".1%")(d)});
@@ -255,48 +264,46 @@ function page_0() {
   });
 
   points.call(draw_box, yScale, val, "box0");
-
-  $("#tale").html("a high interest rate (and the term) on a loan make the difference between paying back " +
-  d3.format(".0%")(total_payments[0]["min"]) + " or " + d3.format(".0%")(total_payments[2]["max"]) +
-  " of the money borrowed<br><span class='punchline'>what drives interest rates up or down ?</span>");
+  
+  $("#tale").html("Using someone else's money can be expensive. The cost of borrowing is different for every person according to how much risk they pose of not paying back the loan on time.<br><br><span class='punchline'>A high interest rate can result in a person paying more than double what they borrowed !</span>");
 
   $("#facts").html("<table class='table-condensed'>" +
   "<h5>Total payment by rate and term</h5>"+
   "<thead>"+
-    "<tr><th>stat</th><th>rate</th><th>1 year</th><th>3 years</th><th>5 years</th></tr>"+
+    "<tr><th class='stat'>stat</th><th>rate</th><th>1 year</th><th>3 years</th><th>5 years</th></tr>"+
   "</thead>"+
   "<tbody>"+
     "<tr>" +
-      "<td>" + "max" + "</td>" +
-      "<td>" + d3.format(".1%")(val["max"]) + "</td>" +
+      "<td class='row-label stat'>" + "max" + "</td>" +
+      "<td class='row-label'>" + d3.format(".1%")(val["max"]) + "</td>" +
       "<td>" + d3.format(".0%")(total_payments[0]["max"]) + "</td>" +
       "<td>" + d3.format(".0%")(total_payments[1]["max"]) + "</td>" +
       "<td class='notice'>" + d3.format(".0%")(total_payments[2]["max"]) + "</td>" +
     "</tr>" +
     "<tr>" +
-      "<td>" + "Q3" + "</td>" +
-      "<td>" + d3.format(".1%")(val["q3"]) + "</td>" +
+      "<td class='row-label stat'>" + "Q3" + "</td>" +
+      "<td class='row-label'>" + d3.format(".1%")(val["q3"]) + "</td>" +
       "<td>" + d3.format(".0%")(total_payments[0]["q3"]) + "</td>" +
       "<td>" + d3.format(".0%")(total_payments[1]["q3"]) + "</td>" +
       "<td>" + d3.format(".0%")(total_payments[2]["q3"]) + "</td>" +
     "</tr>" +
     "<tr>" +
-      "<td>" + "median" + "</td>" +
-      "<td>" + d3.format(".1%")(val["q2"]) + "</td>" +
+      "<td class='row-label stat'>" + "median" + "</td>" +
+      "<td class='row-label'>" + d3.format(".1%")(val["q2"]) + "</td>" +
       "<td>" + d3.format(".0%")(total_payments[0]["q2"]) + "</td>" +
       "<td>" + d3.format(".0%")(total_payments[1]["q2"]) + "</td>" +
       "<td>" + d3.format(".0%")(total_payments[2]["q2"]) + "</td>" +
     "</tr>" +
     "<tr>" +
-      "<td>" + "Q1" + "</td>" +
-      "<td>" + d3.format(".1%")(val["q1"]) + "</td>" +
+      "<td class='row-label stat'>" + "Q1" + "</td>" +
+      "<td class='row-label'>" + d3.format(".1%")(val["q1"]) + "</td>" +
       "<td>" + d3.format(".0%")(total_payments[0]["q1"]) + "</td>" +
       "<td>" + d3.format(".0%")(total_payments[1]["q1"]) + "</td>" +
       "<td>" + d3.format(".0%")(total_payments[2]["q1"]) + "</td>" +
     "</tr>" +
     "<tr>" +
-      "<td>" + "min" + "</td>" +
-      "<td>" + d3.format(".1%")(val["min"]) + "</td>" +
+      "<td class='row-label stat'>" + "min" + "</td>" +
+      "<td class='row-label'>" + d3.format(".1%")(val["min"]) + "</td>" +
       "<td class='notice'>" + d3.format(".0%")(total_payments[0]["min"]) + "</td>" +
       "<td>" + d3.format(".0%")(total_payments[1]["min"]) + "</td>" +
       "<td>" + d3.format(".0%")(total_payments[2]["min"]) + "</td>" +
@@ -304,15 +311,15 @@ function page_0() {
   "</tbody>"+
   "</table>");
 
-  $("nav ul").html("<li class='next'><button class='btn btn-default' type='button' onclick='page_1()'><span aria-hidden='true'></span>next &rarr;</button></li>");
+  $("nav ul").html("<li class='next'><button class='btn btn-default' type='button' onclick='page_1()'><span aria-hidden='true'></span>Next  &rarr;</button></li>");
 
-  $("#strategies").attr("data-content", "&bull; shorter term requires higher payments\n&bull; shorter term translates into less money paid back\n&bull; lower rate means less money paid back");
-  
   $("#dataset").attr("data-content",
-  "Prosper Marketplace Inc. is an intermediary\nof peer to peer lending in the US.\n\nThe dataset contains 114K observations about\nProsper loans, each with 81 variables.\n\nFor this visualization the dataset has been\ntruncated to only the datapoints with the\nnew Prosper rating and the variables used.");
+  "<a target='_blank' href='http://www.prosper.com/'>Prosper Marketplace Inc.</a> is an intermediary of peer to peer lending in the US.<br>In this financing model, the borrower submits a loan application, the investors<br>fund the loan, and the intermediary conducts the process of loaning and<br>collecting the money which is paid back to the investors.<br><br>This dataset contains 114K datapoints about Prosper loans given between<br>Nov 2005 and Mar 2014. Each datapoint has 81 variables.<br><br>For this visualization the dataset has been truncated to about 83K datapoints<br>that use the new Prosper Rating (2009), and to only the 6 variables used.");
 
-  $("#references").attr("data-content", "my own <a target='_blank' href='https://cesartablas.github.io/eda-loans/'>exploratory data analysis</a>\n");
+  $("#references").attr("data-content", "<ul><li>César Tablas: <a target='_blank' href='https://cesartablas.github.io/eda-loans/'>Exploratory Data Analysis</a> of Prosper Loans</li><li>Reader's Digest: <a target='_blank' href='http://www.rd.com/advice/saving-money/your-credit-score-the-magic-money-number-explained/'>Your Credit Score: The Magic Number Explained</a></li></ul>");
 
+  $("#insights").attr("data-content", "<ul><li class='insights page-0'>A lower Interest Rate means less money paid back.</li><li class='insights page-0'>A shorter Term translates into less money paid back.</li><li class='insights page-0'>A shorter Term requires higher payments.</li></ul>");
+  
 }
 
 
@@ -320,18 +327,21 @@ function page_1() {
 
   "use strict";
   
-  $("#tale").html("the credit score represents a lender's creditworthiness and the interest rate is a reward for the risk of lending him the money<br><span class='punchline'>what strategies can we use to increase our credit score ?</span>");
+  $("#tale").html("The Credit Score represents a person's creditworthiness &mdash;their likelihood to pay on time. And it's used by lenders to determine if someone qualifies for credit, and if so, how much interest they will charge them to compensate for the risk.<br><br><span class='punchline'>Explore how Credit Score and other variables influence the Interest Rate.</span>");
 
   $("#facts").append("<h4 class='label label-default'>Explore by clicking on the bars</h4>");
 
-  $("#strategies").attr("data-content", "&bull; the higher the credit scores the lower the interest rate");
-  
   $("#dataset").attr("data-content",
-  "Distribution of Credit Scores<br><img src='Rplot01.png' alt='Credit Scores Histogram' height='100' width='200'><br>Prosper has their own Rating based on the\ncredit scores reported by the different agencies.\n\nFor this visualization I chose the variable\nCreditScoreRangeUpper as the Credit Score");
+  "Prosper uses its own rating scale to assess the lenders. This dataset contains<br>only the datapoints using the new scale introduced on July 2009 that ranges<br>from 1 (worse) to 7 (best).<br><br>However, for this visualization, the Credit Score used is the one reported<br>by credit bureaus using the FICO scale (from 300-worst to 850-best), that<br>is the score submitted by the lender during the loan application.<br><br>The general trend, as seen on the plot below, is that as the Credit Score<br>increases, the Interest Rate decreases.<br><br>Interest Rate vs. Credit Score<img src='img/Credit-Score.png' alt='Interest Rate vs. Credit Score' height='150' width='300'>");
+  
+  $("#references").attr("data-content", "César Tablas: <a target='_blank' href='https://cesartablas.github.io/eda-loans/'>Exploratory Data Analysis</a> of Prosper Loans\nReader's Digest: <a target='_blank' href='http://www.rd.com/advice/saving-money/your-credit-score-the-magic-money-number-explained/'>Your Credit Score: The Magic Number Explained</a>");
 
-  $("#references").attr("data-content", "My previous <a target='_blank' href='https://cesartablas.github.io/eda-loans/'>Exploratory Data Analysis</a>\n");
+  $("#insights").attr("data-content", "<ul><li class='insights page-0'>A lower Interest Rate means less money paid back.</li><li class='insights page-0'>A shorter Term translates into less money paid back.</li><li class='insights page-0'>A shorter Term requires higher payments.</li><li class='insights page-1'>A higher Credit Score awards a lower Interest Rate.</li></ul>");
+  
 
-  $("nav ul").html("<li class='previous'><button class='btn btn-default' type='button' onclick='page_0()'><span aria-hidden='true'></span>&larr; previous</button></li><li class='next'><button class='btn btn-default' type='button' onclick='page_3()'><span aria-hidden='true'></span>next &rarr;</button></li>");
+  $("#references").attr("data-content", "My previous <a target='_blank' href='https://cesartablas.github.io/eda-loans/'>Exploratory Data Analysis</a>\n Reader's Digest <a target='_blank' href='http://www.rd.com/advice/saving-money/your-credit-score-the-magic-money-number-explained/'>Your Credit Score: The Magic Number Explained</a>");
+
+  $("nav ul").html("<li class='previous'><button class='btn btn-default' type='button' onclick='page_0()'><span aria-hidden='true'></span>&larr; Previous</button></li> <li class='next'><button class='btn btn-default' type='button' onclick='page_3()'><span aria-hidden='true'></span>Next &rarr;</button></li>");
 
   var creditScores = pl.map(function(d) {return +d.CreditScoreRangeUpper;});
 
@@ -426,6 +436,7 @@ function filter_() {
     this.parentElement.setAttribute("class", "bar filtered");
 
 }
+
 
 jQuery.fn.d3Click = function () {
   /*http://stackoverflow.com/a/11180172*/
