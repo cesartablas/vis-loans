@@ -297,7 +297,7 @@ function page_0() {
 
   points.call(draw_box, yScale, val, "box0");
   
-  $("#tale").html("Using someone else's money can be expensive. The cost of borrowing is different for every person according to how much risk they pose of not paying back the loan on time.<br><br><span class='punchline'>A high interest rate can result in a person paying more than double what they borrowed !</span>");
+  $("#tale").html("Using someone else's money can be expensive. The cost of borrowing is different for d person according to how much risk they pose of not paying back the loan on time.<br><br><span class='punchline'>A high interest rate can result in a person paying more than double what they borrowed !</span>");
 
   $("#facts").html("<table class='table-condensed'>" +
   "<h5>Total payment by rate and term</h5>"+
@@ -346,7 +346,7 @@ function page_0() {
   $("#pager").html("<li class='next'><button class='btn btn-default' type='button' onclick='page_1()'><span aria-hidden='true'></span>Next &rarr;</button></li>");
 
   $("#dataset").attr("data-content",
-  "<a target='_blank' href='http://www.prosper.com/'>Prosper Marketplace Inc.</a> is an intermediary of peer to peer lending in the US.<br>In this financing model, the borrower submits a loan application, the investors<br>fund the loan, and the intermediary conducts the process of loaning and<br>collecting the money which is paid back to the investors.<br><br>This dataset contains 114K datapoints about Prosper loans given between<br>Nov 2005 and Mar 2014. Each datapoint has 81 variables.<br><br>For this visualization the dataset has been truncated to about 83K datapoints<br>that use the new Prosper Rating (2009), and to only the 6 variables used.");
+  "Prosper Marketplace Inc. is an intermediary of peer to peer lending in the US.<br>In this financing model, the borrower submits a loan application, the investors<br>fund the loan, and the intermediary conducts the process of loaning and<br>collecting the money which is paid back to the investors.<br><br>This dataset contains 114K datapoints about Prosper loans given between<br>Nov 2005 and Mar 2014. Each datapoint has 81 variables.<br><br>For this visualization the dataset has been truncated to about 83K datapoints<br>that use the new Prosper Rating (2009), and to only the 6 variables used.");
 
   $("#references").attr("data-content", "<ul><li>César Tablas: <a target='_blank' href='https://cesartablas.github.io/eda-loans/'>Exploratory Data Analysis</a> of Prosper Loans</li><li>Reader's Digest: <a target='_blank' href='http://www.rd.com/advice/saving-money/your-credit-score-the-magic-money-number-explained/'>Your Credit Score: The Magic Number Explained</a></li></ul>");
 
@@ -359,25 +359,20 @@ function page_1() {
 
   "use strict";
   
-  $("#tale").html("The Credit Score represents a person's creditworthiness &mdash;their likelihood to pay on time. And it is used by lenders to determine if someone qualifies for credit, and if so, how much interest they will charge them to compensate for the risk.<br><span class='punchline'>Explore how Credit Score and other variables influence the Interest Rate...</span>");
+  $("#tale").html("The Credit Score represents how likely a person is to pay back on time. It is used by lenders to determine if someone qualifies for credit and how much interest they will charge them.<br><br><span class='punchline'>Explore how Credit Score and other variables influence the Interest Rate.</span>");
 
   $("#facts").append("<h4 class='label label-default'>Explore by clicking on the bars</h4>");
 
   $("#dataset").attr("data-content",
-  "Prosper uses its own rating scale to assess the lenders. This dataset contains<br>only the datapoints using the new scale introduced on July 2009 that ranges<br>from 1 (worse) to 7 (best).<br><br>However, for this visualization, the Credit Score used is the one reported<br>by credit bureaus using the FICO scale (from 300-worst to 850-best), that<br>is the score submitted by the lender during the loan application.<br><br>The general trend, as seen on the plot below, is that as the Credit Score<br>increases, the Interest Rate decreases.<br><br>Interest Rate vs. Credit Score<img src='img/Credit-Score.png' alt='Interest Rate vs. Credit Score' height='150' width='300'>");
+  "Prosper uses its own rating scale to assess the lenders. This dataset contains<br>only the datapoints using the new scale introduced on July 2009 that ranges<br>from 1 (worst) to 7 (best).<br><br>However, for this visualization, the Credit Score used is the one reported<br>by credit bureaus using the FICO scale &mdash; from 300 (worst) to 850 (best), which<br>is the score submitted by the lender during the loan application.<br><br>The general trend, as seen on the plot below, is that the Interest Rate<br>decreases with an increase in Credit Score.<br><br>Interest Rate vs. Credit Score<img src='img/Credit-Score.png' alt='Interest Rate vs. Credit Score' height='150' width='300'>");
   
-  $("#references").attr("data-content", "César Tablas: <a target='_blank' href='https://cesartablas.github.io/eda-loans/'>Exploratory Data Analysis</a> of Prosper Loans\nReader's Digest: <a target='_blank' href='http://www.rd.com/advice/saving-money/your-credit-score-the-magic-money-number-explained/'>Your Credit Score: The Magic Number Explained</a>");
-
   $("#insights").attr("data-content", "<ul><li class='insights page-0'>A lower Interest Rate means less money paid back.</li><li class='insights page-0'>A shorter Term translates into less money paid back.</li><li class='insights page-0'>A shorter Term requires higher payments.</li><li class='insights page-1'>A higher Credit Score awards a lower Interest Rate.</li></ul>");
-  
-
-  $("#references").attr("data-content", "My previous <a target='_blank' href='https://cesartablas.github.io/eda-loans/'>Exploratory Data Analysis</a>\n Reader's Digest <a target='_blank' href='http://www.rd.com/advice/saving-money/your-credit-score-the-magic-money-number-explained/'>Your Credit Score: The Magic Number Explained</a>");
 
   $("nav ul").html("<li class='previous'><button class='btn btn-default' type='button' onclick='page_0()'><span aria-hidden='true'></span>&larr; Previous</button></li>&nbsp;<li class='next'><button class='btn btn-default' type='button' onclick='page_2()' disabled='disabled'><span aria-hidden='true'></span>Next &rarr;</button></li>");
 
   $("#dropdown").html("<button id='dLabel' class='btn btn-default btn-sm'type='button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>Explore Interaction with Other Variables <span class='caret'> </span></button><ul id='explore' class='dropdown-menu' aria-labelledby='dLabel'></ul>");
  
-  $("#explore").html("<li><a onclick='page_1()'>Credit Score</a></li><li class='divider'></li><li><a onclick='totalInquiries()'>Inquiries</a></li><li><a onclick='bankcardUtilization()'>Bankcard Utilization</a></li><li><a onclick='debtToIncomeRatio()'>Debt to Income Ratio</a></li><li><a onclick='currentCreditLines()'>Credit Lines</a></li>");
+  $("#explore").html("<li><a onclick='page_1()'>Credit Score</a></li><li class='divider'></li><li><a onclick='currentCreditLines()'>Number of Credit Lines</a></li><li><a onclick='debtToIncomeRatio()'>Debt to Income Ratio</a></li><li><a onclick='totalInquiries()'>Inquiries to Your Account</a></li><li><a onclick='bankcardUtilization()'>Bank Card Utilization</a></li>");
 
   window.var_name = "CreditScoreRangeUpper";
 
@@ -390,6 +385,31 @@ function page_1() {
 }
 
 
+function currentCreditLines() {
+
+  "use strict";
+
+  $("#box1").html("");
+  d3.selectAll(".filtered").classed("filtered", false);
+
+  $("#tale").html("The number of Credit Lines that a borrower has, affects their Credit Score. Counterintuitively, the more Credit Lines a person has, the lower their Interest Rate.<br><br><span class='punchline'>Explore how more than 10 Credit Lines is better than having 0.</span>");
+
+  $("#insights").attr("data-content", "<ul><li class='insights page-0'>A lower Interest Rate means less money paid back.</li><li class='insights page-0'>A shorter Term translates into less money paid back.</li><li class='insights page-0'>A shorter Term requires higher payments.</li><li class='insights page-1'>A higher Credit Score awards a lower Interest Rate.</li><li class='insights credit-lines'>More Credit Lines is better than None.</li></ul>");
+  
+  $("#dataset").attr("data-content",
+  "Prosper records many variables related to Credit Lines:<br><ul><li>First recorded credit line</li><li>Current credit lines</li><li>Open credit lines</li><li>Total credit lines past 7 years</li><li>Open revolving accounts</li><li>Open revolving monthly payment</li></ul> <br>That indicates that they give great importance to the number of credit lines.<br><br>Interest Rate vs. Credit Lines<img src='img/Credit-Lines.png' alt='Interest Rate vs. Credit Lines' height='150' width='300'>");
+
+  window.var_name = "CurrentCreditLines";
+
+  var ratio = pl.map(function(d) {return +d[var_name];});
+
+  var data = draw_hist(ratio, "Credit Lines", [0, 20]);
+
+  $("g.bar :eq(0)").d3Click();
+
+}
+
+
 function debtToIncomeRatio() {
 
   "use strict";
@@ -397,18 +417,12 @@ function debtToIncomeRatio() {
   $("#box1").html("");
   d3.selectAll(".filtered").classed("filtered", false);
 
-  $("#tale").html("the credit score represents a lender's creditworthiness and the interest rate is a reward for the risk of lending him the money<br><span class='punchline'>what strategies can we use to increase our credit score ?</span>");
+  $("#tale").html("The more a person's take home money goes into paying their debt, the higher their Interest Rate will be.<br><br><span class='punchline'>Explore how more than 20-30% of your income going into paying debt increases the Interest Rate.</span>");
 
-  $("#facts").append("<h4 class='label label-default'>Explore by clicking on the bars</h4>");
-
-  $("#strategies").attr("data-content", "&bull; the higher the credit scores the lower the interest rate");
+  $("#insights").attr("data-content", "<ul><li class='insights page-0'>A lower Interest Rate means less money paid back.</li><li class='insights page-0'>A shorter Term translates into less money paid back.</li><li class='insights page-0'>A shorter Term requires higher payments.</li><li class='insights page-1'>A higher Credit Score awards a lower Interest Rate.</li><li class='insights credit-lines'>More Credit Lines is better than None.</li><li class='insights debt-to-imcome-ratio'>Debt greater than 20-30% the Income increases the Interest Rate.</li></ul>");
   
   $("#dataset").attr("data-content",
-  "Distribution of Credit Scores<br><img src='Rplot01.png' alt='Credit Scores Histogram' height='100' width='200'><br>Prosper has their own Rating based on the\ncredit scores reported by the different agencies.\n\nFor this visualization I chose the variable\nCreditScoreRangeUpper as the Credit Score");
-
-  $("#references").attr("data-content", "My previous <a target='_blank' href='https://cesartablas.github.io/eda-loans/'>Exploratory Data Analysis</a>\n");
-
-  $("#explore").html("<li><a onclick='page_1()'>Credit Score</a></li><li><a onclick='totalInquiries()'>Inquiries</a></li><li><a onclick='bankcardUtilization()'>Bankcard Utilization</a></li><li><a onclick='debtToIncomeRatio()'>Debt to Income Ratio</a></li><li><a onclick='currentCreditLines()'>Credit Lines</a></li>");
+  "Prosper records many variables related to a lender's income:<br><ul><li>Employment status</li><li>Employment status duration</li><li>Occupation</li><li>Debt to income ratio</li><li>Income range</li><li>Income verifiable</li><li>Stated monthly income</li></ul><br>Interest Rate vs. Debt to Income Ratio<img src='img/Debt-To-Income-Ratio.png' alt='Interest Rate vs. Debt to Income Ratio' height='150' width='300'>");
 
   window.var_name = "DebtToIncomeRatio";
 
@@ -428,18 +442,12 @@ function totalInquiries() {
   $("#box1").html("");
   d3.selectAll(".filtered").classed("filtered", false);
 
-  $("#tale").html("the credit score represents a lender's creditworthiness and the interest rate is a reward for the risk of lending him the money<br><span class='punchline'>what strategies can we use to increase our credit score ?</span>");
+  $("#tale").html("Every time anyone (credit card, phone company, department store, landlord, etc.) checks someone's Credit Score, it increases their Interest Rate.<br><br><span class='punchline'>Explore how Interest Rate mostly increases with the number of Inquiries.</span>");
 
-  $("#facts").append("<h4 class='label label-default'>Explore by clicking on the bars</h4>");
-
-  $("#strategies").attr("data-content", "&bull; the higher the credit scores the lower the interest rate");
+  $("#insights").attr("data-content", "<ul><li class='insights page-0'>A lower Interest Rate means less money paid back.</li><li class='insights page-0'>A shorter Term translates into less money paid back.</li><li class='insights page-0'>A shorter Term requires higher payments.</li><li class='insights page-1'>A higher Credit Score awards a lower Interest Rate.</li><li class='insights credit-lines'>More Credit Lines is better than None.</li><li class='insights debt-to-imcome-ratio'>Debt greater than 20-30% the Income increases the Interest Rate.</li><li class='insights total-inquiries'>More Inquiries to your account contributes to a higher Interest Rate.</li></ul>");
   
   $("#dataset").attr("data-content",
-  "Distribution of Credit Scores<br><img src='Rplot01.png' alt='Credit Scores Histogram' height='100' width='200'><br>Prosper has their own Rating based on the\ncredit scores reported by the different agencies.\n\nFor this visualization I chose the variable\nCreditScoreRangeUpper as the Credit Score");
-
-  $("#references").attr("data-content", "My previous <a target='_blank' href='https://cesartablas.github.io/eda-loans/'>Exploratory Data Analysis</a>\n");
-
-  $("#explore").html("<li><a onclick='page_1()'>Credit Score</a></li><li><a onclick='totalInquiries()'>Inquiries</a></li><li><a onclick='bankcardUtilization()'>Bankcard Utilization</a></li><li><a onclick='debtToIncomeRatio()'>Debt to Income Ratio</a></li><li><a onclick='currentCreditLines()'>Credit Lines</a></li>");
+  "Prosper records current and past Inquireies and Delinquencies.<br><br><img src='img/Total-Inquiries.png' alt='Interest Rate vs. Total Inquiries' height='150' width='300'>");
 
   window.var_name = "TotalInquiries";
 
@@ -459,55 +467,18 @@ function bankcardUtilization() {
   $("#box1").html("");
   d3.selectAll(".filtered").classed("filtered", false);
 
-  $("#tale").html("the credit score represents a lender's creditworthiness and the interest rate is a reward for the risk of lending him the money<br><span class='punchline'>what strategies can we use to increase our credit score ?</span>");
+  $("#tale").html("The used fraction of a borrower's available credit is considered by lenders to determine the interest rate.<br><br><span class='punchline'>See how 0% or more than 50% utilization increases the Interest Rate</span>");
 
-  $("#facts").append("<h4 class='label label-default'>Explore by clicking on the bars</h4>");
-
-  $("#strategies").attr("data-content", "&bull; the higher the credit scores the lower the interest rate");
-  
   $("#dataset").attr("data-content",
-  "Distribution of Credit Scores<br><img src='Rplot01.png' alt='Credit Scores Histogram' height='100' width='200'><br>Prosper has their own Rating based on the\ncredit scores reported by the different agencies.\n\nFor this visualization I chose the variable\nCreditScoreRangeUpper as the Credit Score");
+  "Prosper pays attention to the fraction of used credit using these variables:<br><ul><li>Revolving credit balance</li><li>Bank card utilization</li><li>Available bank card credit</li><br><br>Interest Rate vs. Bankcard Utilization<br><img src='img/Bankcard-Utilization.png' alt='Interest Rates vs. Bankcard Utilization' height='150' width='300'>");
 
-  $("#references").attr("data-content", "My previous <a target='_blank' href='https://cesartablas.github.io/eda-loans/'>Exploratory Data Analysis</a>\n");
-
-  $("#explore").html("<li><a onclick='page_1()'>Credit Score</a></li><li><a onclick='totalInquiries()'>Inquiries</a></li><li><a onclick='bankcardUtilization()'>Bankcard Utilization</a></li><li><a onclick='debtToIncomeRatio()'>Debt to Income Ratio</a></li><li><a onclick='currentCreditLines()'>Credit Lines</a></li>");
+  $("#insights").attr("data-content", "<ul><li class='insights page-0'>A lower Interest Rate means less money paid back.</li><li class='insights page-0'>A shorter Term translates into less money paid back.</li><li class='insights page-0'>A shorter Term requires higher payments.</li><li class='insights page-1'>A higher Credit Score awards a lower Interest Rate.</li><li class='insights credit-lines'>More Credit Lines is better than None.</li><li class='insights debt-to-imcome-ratio'>Debt greater than 20-30% the Income increases the Interest Rate.</li><li class='insights total-inquiries'>More Inquiries to your account contributes to a higher Interest Rate.</li><li>Owing 10-40% of the available credit limit yields lower interests.</li></ul>");
 
   window.var_name = "BankcardUtilization";
 
   var ratio = pl.map(function(d) {return +d[var_name];});
 
   var data = draw_hist(ratio, "Bankcard Utilization", [0, 1]);
-
-  $("g.bar :eq(0)").d3Click();
-
-}
-
-
-function currentCreditLines() {
-
-  "use strict";
-
-  $("#box1").html("");
-  d3.selectAll(".filtered").classed("filtered", false);
-
-  $("#tale").html("the credit score represents a lender's creditworthiness and the interest rate is a reward for the risk of lending him the money<br><span class='punchline'>what strategies can we use to increase our credit score ?</span>");
-
-  $("#facts").append("<h4 class='label label-default'>Explore by clicking on the bars</h4>");
-
-  $("#strategies").attr("data-content", "&bull; the higher the credit scores the lower the interest rate");
-  
-  $("#dataset").attr("data-content",
-  "Distribution of Credit Scores<br><img src='Rplot01.png' alt='Credit Scores Histogram' height='100' width='200'><br>Prosper has their own Rating based on the\ncredit scores reported by the different agencies.\n\nFor this visualization I chose the variable\nCreditScoreRangeUpper as the Credit Score");
-
-  $("#references").attr("data-content", "My previous <a target='_blank' href='https://cesartablas.github.io/eda-loans/'>Exploratory Data Analysis</a>\n");
-
-  $("#explore").html("<li><a onclick='page_1()'>Credit Score</a></li><li><a onclick='totalInquiries()'>Inquiries</a></li><li><a onclick='bankcardUtilization()'>Bankcard Utilization</a></li><li><a onclick='debtToIncomeRatio()'>Debt to Income Ratio</a></li><li><a onclick='currentCreditLines()'>Credit Lines</a></li>");
-
-  window.var_name = "CurrentCreditLines";
-
-  var ratio = pl.map(function(d) {return +d[var_name];});
-
-  var data = draw_hist(ratio, "Credit Lines", [0, 20]);
 
   $("g.bar :eq(0)").d3Click();
 

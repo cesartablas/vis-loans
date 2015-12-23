@@ -105,15 +105,8 @@ th, tr, td {
   height: 350px;
   float: left;
   position: relative;
-    /* outline: red solid 1px; */
-<<<<<<< HEAD
+  /* outline: red solid 1px; */
 }
-||||||| merged common ancestors
-
-}
-=======
-}   
->>>>>>> iter3
 
 .tooltip {
   white-space: pre;
@@ -137,13 +130,6 @@ th, tr, td {
   font-weight: 400;
   color: #003c30;
 }
-
-
-/*svg {
-    position: relative;
-    top: 0;
-    left: 0;
-}*/
 
 #dLabel, #dLabel:active, #dLabel:visited {
   color: #003c30;
@@ -174,7 +160,7 @@ th, tr, td {
 #bf812d
 #dfc27d
 #f6e8c3
-         light
+         lighter
 #c7eae5
 #80cdc1
 #35978f
@@ -196,7 +182,7 @@ circle.filtered {
 }
 
 circle:hover {
-  
+  /*todo*/
 }
 
 #box0 rect {

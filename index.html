@@ -50,19 +50,19 @@
       </div>
 
       <footer class="row">
-        <h4 class="ct col-md-2"><a class="ct" target="_blank" href="http://cesar.tablas.ca">César Tablas</a> &mdash; 2015</h4>
-        <button id="dataset" type="button" class="col-md-1 col-md-offset-1 btn btn-default btn-sm" data-toggle="popover" data-placement="top" title="Prosper Loans Dataset" data-content="">dataset</button>
-        <button id="references" type="button" class="col-md-1 col-md-offset-1 btn btn-default btn-sm" data-toggle="popover" data-placement="top" title="References" data-content="">references</button>
-        <button id="insights" type="button" class="col-md-1 col-md-offset-1 btn btn-default btn-sm" data-toggle="popover" data-placement="top" title="Insights Gathered" data-content="">insights</button>
+        <h4 class="ct col-md-2"><a class="ct" target="_blank" href="http://cesartablas.github.io/">César Tablas</a> &mdash; 2015</h4>
+        <button id="dataset" type="button" class="col-md-2 col-md-offset-1 btn btn-default btn-sm" data-toggle="popover" data-placement="top" title="Prosper Loans Dataset" data-content="">dataset</button>
+        <button id="insights" type="button" class="col-md-2 col-md-offset-2 btn btn-default btn-sm" data-toggle="popover" data-placement="top" title="Insights Gathered" data-content="">insights</button>
       </footer>
 
     </div>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
     <!-- Use D3 to load the "Prosper Loans" datafile -->
     <script type="text/javascript">
-      $('[data-toggle=tooltip]').tooltip();
-      $('[data-toggle=popover]').popover({html:true});
-      d3.csv("data/short.csv", draw_cloud);
+      $('[data-toggle=tooltip]').tooltip({html:true});
+      $('[data-toggle=popover]').popover({html:true, trigger:"hover"});
+      //d3.csv("data/short.csv", draw_cloud);
+      d3.csv("data/short_1k.csv", draw_cloud);
       //d3.csv("data/prosperLoanData.csv", draw_cloud);
     </script>
   </body>
