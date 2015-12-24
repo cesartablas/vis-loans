@@ -61,9 +61,13 @@
     <script type="text/javascript">
       $('[data-toggle=tooltip]').tooltip({html:true});
       $('[data-toggle=popover]').popover({html:true, trigger:"hover"});
-      //d3.csv("data/short.csv", draw_cloud);
-      d3.csv("data/short_1k.csv", draw_cloud);
-      //d3.csv("data/prosperLoanData.csv", draw_cloud);
+      /**
+       * Use a smaller file to expedite loading:
+       *   - include only the 6 variables used in the graphs
+       *   - take a random sample of 10K datapoints out of the 83K
+      d3.csv("data/prosperLoanData.csv", draw_cloud);
+       */
+      d3.csv("data/short.csv", draw_cloud);
     </script>
   </body>
 </html>

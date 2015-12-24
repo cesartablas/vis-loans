@@ -294,17 +294,6 @@ circle:hover {
   shape-rendering: crispEdges;
 }
 
-/*.bar text {
-  stroke: #003c30;
-}
-
-.axis path, .axis line {
-  fill: none;
-  stroke: #000;
-  shape-rendering: crispEdges;
-}
-*/
-
 /* animated loading spinner
  * http://www.bootply.com/128062
  * */
