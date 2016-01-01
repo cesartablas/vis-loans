@@ -42,10 +42,20 @@ text.frequency {
 
 .punchline {
   font-weight: 400;
+
+}
+
+.insights {
+  font-weight: 100;
+}
+
+.insights.seen {
+  font-weight: 300;
 }
 
 .notice {
-  color: red;
+  color: #b21212;
+  font-weight: 400;
 }
 
 .row-label {
