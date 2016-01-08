@@ -6,10 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
     <script src="js/charts.js"></script>
 
-    <link href='https://fonts.googleapis.com/css?family=Lato:100,300,400' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lato:300,400' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
     <link href='css/style.css' rel='stylesheet'>
     <link rel='shortcut icon' type='image/x-icon' href='img/favicon.ico' />
@@ -37,6 +37,11 @@
           <div class="row">
             <div id="dropdown" class="dropdown col-md-12"></div>
           </div>
+          <div class="row">
+            <ul id="wrapup" class="pager col-md-12">
+              <li><button type="button" class="col-md-4 col-md-offset-4 btn btn-default" data-toggle="popover" data-placement="left" title="Wrapping it up..." data-content="">Wrap-Up</button></li>
+            </ul>
+          </div>
        </nav>
         <div id="facts" class="col-md-3"></div>
       </div>
@@ -60,7 +65,7 @@
     <!-- Use D3 to load the "Prosper Loans" datafile -->
     <script type="text/javascript">
       $('[data-toggle=tooltip]').tooltip({html:true});
-      $('[data-toggle=popover]').popover({html:true, trigger:"hover"});
+      $('[data-toggle=popover]').popover({html:true, trigger:"focus"});
       /**
        * Use a smaller file to expedite loading:
        *   - include only the 6 variables used in the graphs

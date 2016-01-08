@@ -21,14 +21,14 @@ function draw_cloud(loan_data) {
       width = total_width - margin.left - margin.right,
       height = total_height - margin.top - margin.bottom;
 
-  var cloud = d3.select("#cloud")
+  window.cloud = d3.select("#cloud")
     .append("svg")
       .attr("width", total_width)
       .attr("height", total_height)
     .append("g")
       .attr("class", "cloud");
 
-  var xScale = d3.scale.linear()
+  window.xScale = d3.scale.linear()
     .range([margin.left, margin.left + width])
     .domain([0.0, pl.length]);
 
@@ -66,23 +66,10 @@ function draw_cloud(loan_data) {
       .attr("cx", function(d, n) {return xScale(n++);})
       .attr("cy", function(d) {return yScale(d.BorrowerAPR);});
 
+  window.explored = [0,0,0,0,0];
+
   page_0();
 
-}
-
-
-function update_cloud(focus_on) {
-
-  "use strict";
-
-  /*points
-    .exit()
-      .append("circle")
-      .attr("r", 3)
-      .attr("cx", function(d, n) {return xScale(0);})
-      .attr("cy", function(d) {return yScale(d.BorrowerAPR);});
-*/
-  
 }
 
 
@@ -287,7 +274,7 @@ function page_0() {
   term.forEach(function(t, i) {
     total_payments.push({});
     for (var v in val) {
-      total_payments[i][v] = total_payment(val[v] ,t);
+      total_payments[i][v] = total_payment(val[v], t);
     }
   });
 
@@ -339,7 +326,7 @@ function page_0() {
   "</tbody>"+
   "</table>");
 
-  $("#pager").html("<li class='next'><button class='btn btn-default' type='button' onclick='page_1()'><span aria-hidden='true'></span>Next &rarr;</button></li>");
+  $("#pager").html("<li class='next'><button class='col-md-4 col-md-offset-4 btn btn-default' type='button' onclick='page_1()'><span aria-hidden='true'></span>Next</button></li>");
 
   $("#dataset").attr("data-content",
   "Prosper Marketplace Inc. is an intermediary of peer to peer lending in the US.<br>In this financing model, the borrower submits a loan application, the investors<br>fund the loan, and the intermediary conducts the process of loaning and<br>collecting the money which is paid back to the investors.<br><br>This dataset contains 114K datapoints about Prosper loans given between<br>Nov 2005 and Mar 2014. Each datapoint has 81 variables.<br><br>For this visualization the dataset has been truncated to about 83K datapoints<br>that use the new Prosper Rating (2009), and to only the 6 variables used.");
@@ -354,6 +341,8 @@ function page_0() {
 function page_1() {
 
   "use strict";
+
+  explored[0] = 1;
   
   $("#tale").html("The Credit Score represents how likely a person is to pay back on time. It is used by lenders to determine if someone qualifies for credit and how much interest they will charge them.<br><br><span class='punchline'>Explore how Credit Score and other variables influence the Interest Rate.</span>");
 
@@ -364,28 +353,36 @@ function page_1() {
   
   $("#insights").attr("data-content", highlight_insights("credit-score"));
 
-  $("nav ul").html("<li class='previous'><button class='btn btn-default' type='button' onclick='page_0()'><span aria-hidden='true'></span>&larr; Previous</button></li>");
+  $("#pager").html("<li class='previous'><button class='col-md-4 col-md-offset-4 btn btn-default' type='button' onclick='page_0()'><span aria-hidden='true'></span>Previous</button></li>");
 
   $("#dropdown").html("<button id='dLabel' class='btn btn-default btn-sm'type='button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>Explore Interaction with Other Variables <span class='caret'> </span></button><ul id='explore' class='dropdown-menu' aria-labelledby='dLabel'></ul>");
  
-  $("#explore").html("<li><a onclick='page_1()'>Credit Score</a></li><li class='divider'></li><li><a onclick='currentCreditLines()'>Number of Credit Lines</a></li><li><a onclick='debtToIncomeRatio()'>Debt to Income Ratio</a></li><li><a onclick='totalInquiries()'>Inquiries to Your Account</a></li><li><a onclick='bankcardUtilization()'>Bank Card Utilization</a></li>");
+  $("#explore").html("<li><a onclick='page_1()'>Credit Score</a></li><li class='divider'></li><li><a onclick='totalInquiries()'>Inquiries to Your Account</a></li><li><a onclick='debtToIncomeRatio()'>Debt to Income Ratio</a></li></li><li class='divider'></li><li><a onclick='currentCreditLines()'>Number of Credit Lines</a></li><li><a onclick='bankcardUtilization()'>Bank Card Utilization</a></li>");
 
   window.var_name = "CreditScoreRangeUpper";
 
   var creditScores = pl.map(function(d) {return +d[var_name];});
   
-  var data = draw_hist(creditScores, "Credit Scores", [600,850]);
+  var data = draw_hist(creditScores, "Credit Scores", [600,880]);
 
   $("g.bar :eq(0)").d3Click();
 
-  update_cloud("CreditScore");
-  
+  if (d3.sum(explored) == 5) {
+    $("#wrapup").css("display", "inline-block");
+  }
+  else {
+    $("#wrapup").css("display", "none");
+  }
+
+
 }
 
 
 function currentCreditLines() {
 
   "use strict";
+
+  explored[1] = 1;
 
   $("#box1").html("");
   d3.selectAll(".filtered").classed("filtered", false);
@@ -406,12 +403,22 @@ function currentCreditLines() {
 
   $("g.bar :eq(0)").d3Click();
 
+  if (d3.sum(explored) == 5) {
+    $("#wrapup").css("display", "inline-block");
+  }
+  else {
+    $("#wrapup").css("display", "none");
+  }
+
+
 }
 
 
 function debtToIncomeRatio() {
 
   "use strict";
+
+  explored[2] = 1;
 
   $("#box1").html("");
   d3.selectAll(".filtered").classed("filtered", false);
@@ -432,7 +439,15 @@ function debtToIncomeRatio() {
 
   $("g.bar :eq(0)").d3Click();
 
-  d3.selectAll(".insights.page-0").classed("notice", true)
+  d3.selectAll(".insights.page-0").classed("notice", true);
+
+  if (d3.sum(explored) == 5) {
+    $("#wrapup").css("display", "inline-block");
+  }
+  else {
+    $("#wrapup").css("display", "none");
+  }
+
 
 }
 
@@ -440,6 +455,8 @@ function debtToIncomeRatio() {
 function totalInquiries() {
 
   "use strict";
+
+  explored[3] = 1;
 
   $("#box1").html("");
   d3.selectAll(".filtered").classed("filtered", false);
@@ -459,12 +476,22 @@ function totalInquiries() {
 
   $("g.bar :eq(0)").d3Click();
 
+  if (d3.sum(explored) == 5) {
+    $("#wrapup").css("display", "inline-block");
+  }
+  else {
+    $("#wrapup").css("display", "none");
+  }
+
+
 }
 
 
 function bankcardUtilization() {
 
   "use strict";
+
+  explored[4] = 1;
 
   $("#box1").html("");
   d3.selectAll(".filtered").classed("filtered", false);
@@ -483,6 +510,13 @@ function bankcardUtilization() {
   var data = draw_hist(ratio, "Bankcard Utilization", [0, 1]);
 
   $("g.bar :eq(0)").d3Click();
+
+  if (d3.sum(explored) == 5) {
+    $("#wrapup").css("display", "inline-block");
+  }
+  else {
+    $("#wrapup").css("display", "none");
+  }
 
 }
 
@@ -607,12 +641,12 @@ function highlight_insights(page) {
   
   var insights = [
     {"class": "page0", "insight": "A lower Interest Rate means less money paid back."},
-    {"class": "page0", "insight": "A shorter Term translates into less money paid back."},
-    {"class": "page0", "insight": "A shorter Term requires higher payments."},
+    {"class": "page0", "insight": "A shorter Term translates into less money paid back,<br>but consider: A shorter Term requires higher payments."},
+    //{"class": "page0", "insight": "A shorter Term requires higher payments."},
     {"class": "credit-score", "insight": "A higher Credit Score awards a lower Interest Rate."},
-    {"class": "credit-lines", "insight": "More Credit Lines is better than None."},
-    {"class": "debt-to-imcome-ratio", "insight": "Debt greater than 20-30% the Income increases the Interest Rate."},
     {"class": "total-inquiries", "insight": "More Inquiries to your account contributes to a higher Interest Rate."},
+    {"class": "debt-to-imcome-ratio", "insight": "Debt greater than 20-30% the Income increases the Interest Rate."},
+    {"class": "credit-lines", "insight": "More Credit Lines is better than None."},
     {"class": "bankcard-utilization", "insight": "Owing 10-40% of the available credit limit yields lower interests."}
   ];
 
@@ -633,3 +667,10 @@ function highlight_insights(page) {
 
   return html;
 }
+
+
+function wrapup() {
+  
+}
+
+

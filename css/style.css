@@ -27,6 +27,11 @@ h1 {
   font-weight: 300;
 }
 
+#wrapup {
+  margin: 20px 0;
+  display: none;
+}
+
 text.axis, text.frequency, .var-range {
   stroke: #01665e;
   stroke-width: 0.3;
@@ -180,6 +185,10 @@ th, tr, td {
 circle {
   fill: #f6e8c3;
   stroke: #dfc27d;
+  /* cloud-like colors:
+  fill: #d4d4d2;
+  stroke: #b6b6b4;
+  * */
   stroke-width: 0.7;
   opacity: 0.4;
 }
