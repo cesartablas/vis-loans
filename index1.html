@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script src="js/charts1.js"></script>
+    <link href='https://fonts.googleapis.com/css?family=Lato:100,300,300italic,400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link href='css/style1.css' rel='stylesheet'>
+    <link rel='shortcut icon' type='image/x-icon' href='img/favicon.ico' />
+    <title>Cloud of Loans</title>
+  </head>
+  <body>
+    <div class="container-fluid">
+      <header class="row">
+        <h1 class="col-md-12">Insights from a cloud of loans</h1>
+      </header>
+      <div class="row">
+        <div id="tale" class="col-md-6">A high interest rate (and the term) on a loan make the difference between paying back 104% or 238% of the money borrowed.<br><span class="punchline">What strategies can we use to lower our interest rate ?</span></div>
+        <nav class="col-md-2 col-md-offset-1">
+          <ul class="pager">
+            <li class="previous disabled"><a href="#">Previous</a></li>
+            <li class="next disabled"><a href="#">Next</a></li>
+          </ul>
+        </nav>
+        <div id="facts" class="col-md-3">
+          <table class="table-condensed">
+            <h5>Total Payment by rate and term</h5>
+            <thead>
+              <tr>
+                <th>stat</th>
+                <th>Rate</th>
+                <th>1 year</th>
+                <th>3 years</th>
+                <th>5 years</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Min</td>
+                <td>6.6%</td>
+                <td>104%</td>
+                <td>111%</td>
+                <td>118%</td>
+              </tr>
+              <tr>
+                <td>Q1</td>
+                <td>16.3%</td>
+                <td>109%</td>
+                <td>127%</td>
+                <td>147%</td>
+              </tr>
+              <tr>
+                <td>Median</td>
+                <td>21.3%</td>
+                <td>112%</td>
+                <td>136%</td>
+                <td>163%</td>
+              </tr>
+              <tr>
+                <td>Q3</td>
+                <td>28.6%</td>
+                <td>116%</td>
+                <td>150%</td>
+                <td>189%</td>
+              </tr>
+              <tr>
+                <td>Max</td>
+                <td>41.4%</td>
+                <td>124%</td>
+                <td>176%</td>
+                <td>238%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div id="main" class="row">
+        <div id="cloud" class="col-md-9"></div>
+        <div id="boxplots" class="col-md-3"></div>
+      </div>
+      <footer class="row">
+        <h4 class="ct col-md-3"><!--a class="ct" target="_blank" href="http://cesar.tablas.ca"-->César Tablas<!--/a--> &mdash; 2015</h4>
+        <button type="button" class="col-md-1 col-md-offset-6 btn btn-default btn-sm" data-toggle="popover" data-placement="top" title="Prosper Loans" data-content="The dataset contains information about loans from Prosper Marketplace Inc. For this visualization the dataset has been truncated to only the datapoints with the new Prosper rating and the variables used.">the dataset</button>
+        <button type="button" class="col-md-1 col-md-offset-1 btn btn-default btn-sm" data-toggle="popover" data-placement="top" title="References" data-content="List of references used">references</button>
+      </footer>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <!-- Use D3 to load the "Prosper Loans" datafile -->
+    <script type="text/javascript">
+      $('[data-toggle=tooltip]').tooltip();
+      $('[data-toggle=popover]').popover();
+      d3.csv("data/short.csv", draw_cloud);
+    </script>
+  </body>
+</html>
