@@ -5,13 +5,15 @@
 
 ## Summary
 
-**A primer on Loans:** You need to use someone else's money for a period of time. You will pay the money back, plus some "rent" called interest rate.
+Some simple definitions for those not acquainted with loans and interest rates:
 
-**Interest Rate:** Usually expressed as an annual percentage, and usually calculated on the money still owed, not on the original loan amount. The higher the interest rate, the more money you will pay back. The earliest you pay, the least interest you will pay.
+**Loan:** You need to use someone else's money for a period of time. You will pay the money back, plus some "rent" called interest.
 
-**What influences the interest rate?** Your credit score: some agencies keep record of your borrowing and paying history, and calculate a score that influences what interest rate you will pay. This score relates to your likelihood of paying the debt back on time. 
+**Interest:** Usually expressed as an annual percentage (rate), and usually calculated on the money still owed, not on the original loan amount. The higher the interest rate, the more money you will pay back. The earliest you pay, the least interest you will pay.
 
-This [visualization](http://cesartablas.github.io/vis-loans/) explores the relationships between the Interest Rate that a borrower has to pay on a loan, and the variables that influence this rate, like the credit score, the number of inquiries to your account made to the credit reporting agencies, your debt to income ratio, and the number of credit lines you own.
+**What influences the interest rate?** Your credit score: some agencies keep record of your borrowing and paying history, and calculate a score that influences what interest rate you will pay. This score shows how likely are you to pay the debt back on time.
+
+This [visualization](http://cesartablas.github.io/vis-loans/) explores the relationships between the Interest Rate that a borrower has to pay on a loan, and some of the variables that influence this rate, like the credit score, the number of inquiries to the agencies concerning your account, your debt-to-income ratio, and the number of credit lines you own.
 
 [**Explore ...**](http://cesartablas.github.io/vis-loans/)
 
@@ -19,21 +21,24 @@ This [visualization](http://cesartablas.github.io/vis-loans/) explores the relat
 
 ## Design
 
-The main idea behind this visualization is to plot a difuse arrangement of points simulating a cloud of points ordered by the Borrower Interest Rate in the y-axis. The x-axis serves only to spread out the points. The colors chosen resemble a cloud at dusk: a golden color, and a blue color. I obtained the full scale of 10 colors from [Color Brewer 2.0](http://colorbrewer2.org/).
+The main idea behind this visualization is to plot a difuse arrangement of points simulating a cloud of points ordered by the Borrower Interest Rate in the y-axis. The x-axis serves only to spread out the points. The colors chosen resemble a cloud at dusk: golden and blue colors. I obtained the full scale of 10 colors from [Color Brewer 2.0](http://colorbrewer2.org/).
 
-I wanted the font to be thin and clear both for letters and digits. I chose Łukasz Dziedzic's [Lato](http://www.latofonts.com) font. It's interesting that Lato means 'Summer' in Polish, that makes this a summer cloud.
+I wanted the font to be thin and display both letters and digits clearly. I chose Łukasz Dziedzic's [Lato](http://www.latofonts.com) font. It's interesting that Lato means 'Summer' in Polish, making this a summer cloud.
 
 The main navigation is provided through "Next" and "Previous" buttons. The interaction with the variables of interest is provided by clicking on the histogram bars of the distribution of such variables. After having explored at least 3 variables, a "Wrap-Up" button is revealed to see the conclusion or "takeaway" of this visualization.
 
 The footer contains a "dataset" button that describes the data set incrementally: every new page adds more information about the data set. The same with the "insights" button, which incrementally adds more insights, or conclusions drawn from the visualization.
 
+The original dataset contains 114K observations on Prosper Loans, with 81 variables. Of these, only 83K use the new rating system used since July 2009. The dataset used for the visualization is a random sample of 10,000 points from the original 83K, and only the 6 variables of interest. The trends and values are congruent and the loading time is reduced considerably.
+ 
 After receiving feedback I made these adjustments:
 
+* I tried to use simple words, for people without lot of knowledge about loans, rates, scores, etc.
 * In the main text, I added a space between the description and the "punch line" (bolded text).
 * Added hover effects for the boxplots.
 * Eliminated the "references" button altogether, because it is a static information not relevant to the visualization.
 * Changed the variable name from BorrowerAPR to Borrower Interest Rate, that is more commonly understood.
-* Changed the popover trigger from the default to "focus" to avoid having overlapping descriptions.
+* Changed the popover trigger from the default to "hover" and later to "focus" to avoid having overlapping descriptions.
 * Changed the way the "insights" are displayed, to include all at once, highlight the current ones, and dimming the ones not yet seen.
 * Added a "Wrap-Up" button to display a conclusion or inference about the visualization.
 
@@ -47,9 +52,9 @@ Other feedback were not followed, but were dully considered, mainly:
 
 ## Feedback 
 
-I received the following feedback on the first version of the visualization:
+I received the following feedback on the [first version](http://cesartablas.github.io/vis-loans/index1.html) of the visualization:
 
-#####[**Bogdan:**](http://linkedin.com/in/bogdanpascalau/)
+[**Bogdan:**](http://linkedin.com/in/bogdanpascalau/)
 
 I took a look and I have some feedback!
 
@@ -65,7 +70,7 @@ I noticed the following:
 
 I can take a look at it again once the other pages are available! Hope this helps!
   
-#####[**Daniel:**](http://linkedin.com/in/danieltablas/)
+[**Daniel:**](http://linkedin.com/in/danieltablas/)
   
 I’ve reviewed your graph, and here are a couple of design tweaks that could improve the readability of your information: 
 
@@ -77,9 +82,9 @@ I’ve reviewed your graph, and here are a couple of design tweaks that could im
 
 - I would probably move the graph right above the title, and move the question and description beneath it. That way, what’s visual comes first and before the page fold
   
-I prepared the second version taking some of this feedback into consideration and posted it on Udacity's forum. I received the following feedback:
+I prepared the [second version](http://cesartablas.github.io/vis-loans/index2.html) taking some of this feedback into consideration and posted it on Udacity's forum. I received the following feedback:
 
-#####**Stephen:**
+**@Stephen1:**
 
 - What do you notice in the visualization?
 
