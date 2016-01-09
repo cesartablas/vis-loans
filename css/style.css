@@ -12,7 +12,6 @@ h1 {
 
 #tale, #facts, nav {
   height: 200px;
-  /* outline: red solid 1px; */
 }
 
 #tale {
@@ -47,7 +46,6 @@ text.frequency {
 
 .punchline {
   font-weight: 400;
-
 }
 
 .insights {
@@ -165,6 +163,11 @@ th, tr, td {
 }
 
 #explore > li > a {
+  font-weight: 300;
+  color: #543005;
+}
+
+#wrapup > li > button {
   font-weight: 300;
   color: #543005;
 }

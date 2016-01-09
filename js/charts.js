@@ -367,7 +367,7 @@ function page_1() {
 
   $("g.bar :eq(0)").d3Click();
 
-  if (d3.sum(explored) == 5) {
+  if (d3.sum(explored) >= 3) {
     $("#wrapup").css("display", "inline-block");
   }
   else {
@@ -403,7 +403,7 @@ function currentCreditLines() {
 
   $("g.bar :eq(0)").d3Click();
 
-  if (d3.sum(explored) == 5) {
+  if (d3.sum(explored) >= 3) {
     $("#wrapup").css("display", "inline-block");
   }
   else {
@@ -441,7 +441,7 @@ function debtToIncomeRatio() {
 
   d3.selectAll(".insights.page-0").classed("notice", true);
 
-  if (d3.sum(explored) == 5) {
+  if (d3.sum(explored) >= 3) {
     $("#wrapup").css("display", "inline-block");
   }
   else {
@@ -476,7 +476,7 @@ function totalInquiries() {
 
   $("g.bar :eq(0)").d3Click();
 
-  if (d3.sum(explored) == 5) {
+  if (d3.sum(explored) >= 3) {
     $("#wrapup").css("display", "inline-block");
   }
   else {
@@ -511,7 +511,7 @@ function bankcardUtilization() {
 
   $("g.bar :eq(0)").d3Click();
 
-  if (d3.sum(explored) == 5) {
+  if (d3.sum(explored) >= 3) {
     $("#wrapup").css("display", "inline-block");
   }
   else {
