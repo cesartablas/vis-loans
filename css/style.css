@@ -12,7 +12,6 @@ h1 {
 
 #tale, #facts, nav {
   height: 200px;
-  /* outline: red solid 1px; */
 }
 
 #tale {
@@ -25,6 +24,11 @@ h1 {
   color: #01665e;
   font-size: 0.8em;
   font-weight: 300;
+}
+
+#wrapup {
+  margin: 20px 0;
+  display: none;
 }
 
 text.axis, text.frequency, .var-range {
@@ -44,8 +48,17 @@ text.frequency {
   font-weight: 400;
 }
 
+.insights {
+  font-weight: 100;
+}
+
+.insights.seen {
+  font-weight: 300;
+}
+
 .notice {
-  color: red;
+  color: #b21212;
+  font-weight: 400;
 }
 
 .row-label {
@@ -154,6 +167,11 @@ th, tr, td {
   color: #543005;
 }
 
+#wrapup > li > button {
+  font-weight: 300;
+  color: #543005;
+}
+
 /* the color scale
 #543005  dark brown
 #8c510a
@@ -170,6 +188,10 @@ th, tr, td {
 circle {
   fill: #f6e8c3;
   stroke: #dfc27d;
+  /* cloud-like colors:
+  fill: #d4d4d2;
+  stroke: #b6b6b4;
+  * */
   stroke-width: 0.7;
   opacity: 0.4;
 }
