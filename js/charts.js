@@ -1,14 +1,21 @@
 /**
- * Visualization: Interactin with a Cloud of Loans
+ * Visualization: Interacting with a Cloud of Loans
  *
- * by César Tablas
- * December 2015
- *
+ * by Cesar Tablas
+ * January 2016
  * */
 
+
 function draw_cloud(loan_data) {
-  
   "use strict";
+  /**
+   * This functin is the main entry point for the visualization.
+   * It is called by the script in index.html that loads the data
+   * from the csv file.
+   *
+   * Establishes the main graph dimensions, scales and draws
+   * the cloud of points
+   * */
   
   $("#spinner").remove();
 
@@ -20,14 +27,14 @@ function draw_cloud(loan_data) {
       width = total_width - margin.left - margin.right,
       height = total_height - margin.top - margin.bottom;
 
-  var cloud = d3.select("#cloud")
+  window.cloud = d3.select("#cloud")
     .append("svg")
       .attr("width", total_width)
       .attr("height", total_height)
     .append("g")
       .attr("class", "cloud");
 
-  var xScale = d3.scale.linear()
+  window.xScale = d3.scale.linear()
     .range([margin.left, margin.left + width])
     .domain([0.0, pl.length]);
 
@@ -65,15 +72,28 @@ function draw_cloud(loan_data) {
       .attr("cx", function(d, n) {return xScale(n++);})
       .attr("cy", function(d) {return yScale(d.BorrowerAPR);});
 
+  window.explored = [0,0,0,0,0];
+
   page_0();
 
 }
 
 
 function draw_box(a, yScale, val, id, fmt){
-
   "use strict";
-  
+  /**
+   * Draw a boxplot from a d3 array of points.
+   * 
+   * Adapted from http://bl.ocks.org/mbostock/4061502
+   *
+   * parameters:
+   * a:       d3 array of points (all the points or only the filtered ones)
+   * yScale:  d3 scale defined in draw_cloud()
+   * val:     an object containing summary statistics: summary(a)
+   * id:      "#box0" or "#box1", the id of where to place the boxplot
+   * fmt:     format specification for the variable range text above the boxplot
+   * */
+
   $("#" + id).html("");
   
   var total_width = 90,
@@ -154,6 +174,15 @@ function draw_box(a, yScale, val, id, fmt){
     .text(d3.format(".0%")(val.q2));
 
   if (fmt) {
+    /**
+     * #box1 is drawn many times with different types of data:
+     * integers like the CreditScore, and
+     * fractions like the Debt to Income Ratio.
+     *
+     * This variable controls how to format the range of the variable
+     * that appears above the boxplot. This range corresponds to the
+     * clicked bar that is highlighted in the histogram.
+     * */
     var bar = d3.select("g.bar.filtered")[0][0];
 
     var lower_limit = bar.__data__.x,
@@ -174,8 +203,18 @@ function draw_box(a, yScale, val, id, fmt){
 
 
 function draw_hist(vals, label, range) {
-  
   "use strict";
+  /**
+   * Draw a histogram for the variable in consideration.
+   * 
+   * Adapted from http://bl.ocks.org/mbostock/3048450
+   *
+   * parameters:
+   * vals:    an array with the values of the variable
+   * label:   X-axis text to display
+   * range:   an array of [lower_limit, upper_limit] for the histogram
+   *          if needed to override the default one
+   * */
   
   $("#facts").html("");
   
@@ -248,22 +287,25 @@ function draw_hist(vals, label, range) {
     .attr("text-anchor", "left")
     .attr("transform", "translate(2,-2)")
     .text(function(d) {return d3.format(".0%")(d.length / vals.length)});
-    
-  return data;
 
 }
 
 
 function page_0() {
-
   "use strict";
+  /**
+   * Define and display the main elements to complete the first page
+   * of the visualization.
+   *
+   * These elements are: the storyline, table, boxplot, navigation
+   * and buttons.
+   * */
 
   $("#box1").html("");
   d3.selectAll(".filtered").classed("filtered", false);
 
   $("#dropdown").html("");
 
- 
   var val = summary(points),
       term = [1, 3, 5],
       total_payments = [];
@@ -271,7 +313,7 @@ function page_0() {
   term.forEach(function(t, i) {
     total_payments.push({});
     for (var v in val) {
-      total_payments[i][v] = total_payment(val[v] ,t);
+      total_payments[i][v] = total_payment(val[v], t);
     }
   });
 
@@ -323,21 +365,25 @@ function page_0() {
   "</tbody>"+
   "</table>");
 
-  $("#pager").html("<li class='next'><button class='btn btn-default' type='button' onclick='page_1()'><span aria-hidden='true'></span>Next &rarr;</button></li>");
+  $("#pager").html("<li class='next'><button class='col-md-4 col-md-offset-4 btn btn-default' type='button' onclick='page_1()'><span aria-hidden='true'></span>Next</button></li>");
 
   $("#dataset").attr("data-content",
   "Prosper Marketplace Inc. is an intermediary of peer to peer lending in the US.<br>In this financing model, the borrower submits a loan application, the investors<br>fund the loan, and the intermediary conducts the process of loaning and<br>collecting the money which is paid back to the investors.<br><br>This dataset contains 114K datapoints about Prosper loans given between<br>Nov 2005 and Mar 2014. Each datapoint has 81 variables.<br><br>For this visualization the dataset has been truncated to about 83K datapoints<br>that use the new Prosper Rating (2009), and to only the 6 variables used.");
 
-  $("#references").attr("data-content", "<ul><li>César Tablas: <a target='_blank' href='https://cesartablas.github.io/eda-loans/'>Exploratory Data Analysis</a> of Prosper Loans</li><li>Reader's Digest: <a target='_blank' href='http://www.rd.com/advice/saving-money/your-credit-score-the-magic-money-number-explained/'>Your Credit Score: The Magic Number Explained</a></li></ul>");
-
-  $("#insights").attr("data-content", "<ul><li class='insights page0'>A lower Interest Rate means less money paid back.</li><li class='insights page0'>A shorter Term translates into less money paid back.</li><li class='insights page0'>A shorter Term requires higher payments.</li></ul>");
+  $("#insights").attr("data-content", highlight_insights("page0"));
 
 }
 
 
 function page_1() {
-
   "use strict";
+  /**
+   * Define and display the main elements of the second page
+   * of the visualization and Draw the histogram for the
+   * first variable: Credit Scores.
+   * */
+
+  explored[0] = 1;
   
   $("#tale").html("The Credit Score represents how likely a person is to pay back on time. It is used by lenders to determine if someone qualifies for credit and how much interest they will charge them.<br><br><span class='punchline'>Explore how Credit Score and other variables influence the Interest Rate.</span>");
 
@@ -346,53 +392,65 @@ function page_1() {
   $("#dataset").attr("data-content",
   "Prosper uses its own rating scale to assess the lenders. This dataset contains<br>only the datapoints using the new scale introduced on July 2009 that ranges<br>from 1 (worst) to 7 (best).<br><br>However, for this visualization, the Credit Score used is the one reported<br>by credit bureaus using the FICO scale &mdash; from 300 (worst) to 850 (best), which<br>is the score submitted by the lender during the loan application.<br><br>The general trend, as seen on the plot below, is that the Interest Rate<br>decreases with an increase in Credit Score.<br><br>Interest Rate vs. Credit Score<img src='img/Credit-Score.png' alt='Interest Rate vs. Credit Score' height='150' width='300'>");
   
-  $("#insights").attr("data-content", "<ul><li class='insights page0'>A lower Interest Rate means less money paid back.</li><li class='insights page0'>A shorter Term translates into less money paid back.</li><li class='insights page0'>A shorter Term requires higher payments.</li><li class='insights credit-score'>A higher Credit Score awards a lower Interest Rate.</li></ul>");
+  $("#insights").attr("data-content", highlight_insights("credit-score"));
 
-  $("nav ul").html("<li class='previous'><button class='btn btn-default' type='button' onclick='page_0()'><span aria-hidden='true'></span>&larr; Previous</button></li>");
+  $("#pager").html("<li class='previous'><button class='col-md-4 col-md-offset-4 btn btn-default' type='button' onclick='page_0()'><span aria-hidden='true'></span>Previous</button></li>");
 
-  $("#dropdown").html("<button id='dLabel' class='btn btn-default btn-sm'type='button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>Explore Interaction with Other Variables <span class='caret'> </span></button><ul id='explore' class='dropdown-menu' aria-labelledby='dLabel'></ul>");
+  $("#dropdown").html("<button id='dLabel' class='btn btn-default btn-sm'type='button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>Explore Interacting with Other Variables <span class='caret'> </span></button><ul id='explore' class='dropdown-menu' aria-labelledby='dLabel'></ul>");
  
-  $("#explore").html("<li><a onclick='page_1()'>Credit Score</a></li><li class='divider'></li><li><a onclick='currentCreditLines()'>Number of Credit Lines</a></li><li><a onclick='debtToIncomeRatio()'>Debt to Income Ratio</a></li><li><a onclick='totalInquiries()'>Inquiries to Your Account</a></li><li><a onclick='bankcardUtilization()'>Bank Card Utilization</a></li>");
+  $("#explore").html("<li><a onclick='page_1()'>Credit Score</a></li><li class='divider'></li><li><a onclick='totalInquiries()'>Inquiries to Your Account</a></li><li><a onclick='debtToIncomeRatio()'>Debt to Income Ratio</a></li></li><li class='divider'></li><li><a onclick='currentCreditLines()'>Number of Credit Lines</a></li><li><a onclick='bankcardUtilization()'>Bank Card Utilization</a></li>");
 
   window.var_name = "CreditScoreRangeUpper";
 
-  var creditScores = pl.map(function(d) {return +d[var_name];});
+  var vals = pl.map(function(d) {return +d[var_name];});
   
-  var data = draw_hist(creditScores, "Credit Scores", [600,850]);
+  draw_hist(vals, "Credit Scores", [600,880]);
 
   $("g.bar :eq(0)").d3Click();
-  
+
+  $("#wrapup").css("display", d3.sum(explored) >= 3 ? "inline-block" : "none");
+
 }
 
 
 function currentCreditLines() {
-
   "use strict";
+  /**
+   * Draw histogram and change page content for: Credit Lines
+   * */
+  
+  explored[1] = 1;
 
   $("#box1").html("");
   d3.selectAll(".filtered").classed("filtered", false);
 
   $("#tale").html("The number of Credit Lines that a borrower has, affects their Credit Score. Counterintuitively, the more Credit Lines a person has, the lower their Interest Rate.<br><br><span class='punchline'>Explore how more than 10 Credit Lines is better than having 0.</span>");
 
-  $("#insights").attr("data-content", "<ul><li class='insights page0'>A lower Interest Rate means less money paid back.</li><li class='insights page0'>A shorter Term translates into less money paid back.</li><li class='insights page0'>A shorter Term requires higher payments.</li><li class='insights credit-score'>A higher Credit Score awards a lower Interest Rate.</li><li class='insights credit-lines'>More Credit Lines is better than None.</li></ul>");
+  $("#insights").attr("data-content", highlight_insights("credit-lines"));
   
   $("#dataset").attr("data-content",
   "Prosper records many variables related to Credit Lines:<br><ul><li>First recorded credit line</li><li>Current credit lines</li><li>Open credit lines</li><li>Total credit lines past 7 years</li><li>Open revolving accounts</li><li>Open revolving monthly payment</li></ul> <br>That indicates that they give great importance to the number of credit lines.<br><br>Interest Rate vs. Credit Lines<img src='img/Credit-Lines.png' alt='Interest Rate vs. Credit Lines' height='150' width='300'>");
 
   window.var_name = "CurrentCreditLines";
 
-  var ratio = pl.map(function(d) {return +d[var_name];});
+  var vals = pl.map(function(d) {return +d[var_name];});
 
-  var data = draw_hist(ratio, "Credit Lines", [0, 20]);
+  var data = draw_hist(vals, "Credit Lines", [0, 20]);
 
   $("g.bar :eq(0)").d3Click();
+
+  $("#wrapup").css("display", d3.sum(explored) >= 3 ? "inline-block" : "none");
 
 }
 
 
 function debtToIncomeRatio() {
-
   "use strict";
+  /**
+   * Draw histogram and change page content for: Debt to Income Ratio
+   * */
+
+  explored[2] = 1;
 
   $("#box1").html("");
   d3.selectAll(".filtered").classed("filtered", false);
@@ -400,52 +458,64 @@ function debtToIncomeRatio() {
 
   $("#tale").html("The more a person's take home money goes into paying their debt, the higher their Interest Rate will be.<br><br><span class='punchline'>Explore how more than 20-30% of your income going into paying debt increases the Interest Rate.</span>");
 
-  $("#insights").attr("data-content", "<ul><li class='insights page0'>A lower Interest Rate means less money paid back.</li><li class='insights page0'>A shorter Term translates into less money paid back.</li><li class='insights page0'>A shorter Term requires higher payments.</li><li class='insights credit-score'>A higher Credit Score awards a lower Interest Rate.</li><li class='insights credit-lines'>More Credit Lines is better than None.</li><li class='insights debt-to-imcome-ratio'>Debt greater than 20-30% the Income increases the Interest Rate.</li></ul>");
+  $("#insights").attr("data-content", highlight_insights("debt-to-imcome-ratio"));
   
   $("#dataset").attr("data-content",
   "Prosper records many variables related to a lender's income:<br><ul><li>Employment status</li><li>Employment status duration</li><li>Occupation</li><li>Debt to income ratio</li><li>Income range</li><li>Income verifiable</li><li>Stated monthly income</li></ul><br><br>The rate seems fairly constant in the range of 0-40%.<br>After 40% the Interest tends to increase.<br><br>Interest Rate vs. Debt to Income Ratio<img src='img/Debt-To-Income-Ratio.png' alt='Interest Rate vs. Debt to Income Ratio' height='150' width='300'>");
 
   window.var_name = "DebtToIncomeRatio";
 
-  var ratio = pl.map(function(d) {return +d[var_name];});
+  var vals = pl.map(function(d) {return +d[var_name];});
 
-  var data = draw_hist(ratio, "Debt to Income Ratio", [0, 1]);
+  var data = draw_hist(vals, "Debt to Income Ratio", [0, 1]);
 
   $("g.bar :eq(0)").d3Click();
 
-  d3.selectAll(".insights.page-0").classed("notice", true)
+  d3.selectAll(".insights.page-0").classed("notice", true);
+
+  $("#wrapup").css("display", d3.sum(explored) >= 3 ? "inline-block" : "none");
 
 }
 
 
 function totalInquiries() {
-
   "use strict";
+  /**
+   * Draw histogram and change page content for: Inquiries
+   * */
+
+  explored[3] = 1;
 
   $("#box1").html("");
   d3.selectAll(".filtered").classed("filtered", false);
 
   $("#tale").html("Every time anyone (credit card, phone company, department store, landlord, etc.) checks someone's Credit Score, it increases their Interest Rate.<br><br><span class='punchline'>Explore how Interest Rate mostly increases with the number of Inquiries.</span>");
 
-  $("#insights").attr("data-content", "<ul><li class='insights page0'>A lower Interest Rate means less money paid back.</li><li class='insights page0'>A shorter Term translates into less money paid back.</li><li class='insights page0'>A shorter Term requires higher payments.</li><li class='insights credit-score'>A higher Credit Score awards a lower Interest Rate.</li><li class='insights credit-lines'>More Credit Lines is better than None.</li><li class='insights debt-to-imcome-ratio'>Debt greater than 20-30% the Income increases the Interest Rate.</li><li class='insights total-inquiries'>More Inquiries to your account contributes to a higher Interest Rate.</li></ul>");
+  $("#insights").attr("data-content", highlight_insights("total-inquiries"));
   
   $("#dataset").attr("data-content",
   "Prosper records current and past Inquiries and Delinquencies.<br><br>The Interset Rate tends to increase with more Inquiries.<br><br>Interest Rate vs. Total Inquiries<img src='img/Total-Inquiries.png' alt='Interest Rate vs. Total Inquiries' height='150' width='300'>");
 
   window.var_name = "TotalInquiries";
 
-  var ratio = pl.map(function(d) {return +d[var_name];});
+  var vals = pl.map(function(d) {return +d[var_name];});
 
-  var data = draw_hist(ratio, "Total Inquiries", [0, 20]);
+  var data = draw_hist(vals, "Total Inquiries", [0, 20]);
 
   $("g.bar :eq(0)").d3Click();
+
+  $("#wrapup").css("display", d3.sum(explored) >= 3 ? "inline-block" : "none");
 
 }
 
 
 function bankcardUtilization() {
-
   "use strict";
+  /**
+   * Draw histogram and change page content for: Bankcard Utilization
+   * */
+
+  explored[4] = 1;
 
   $("#box1").html("");
   d3.selectAll(".filtered").classed("filtered", false);
@@ -455,15 +525,17 @@ function bankcardUtilization() {
   $("#dataset").attr("data-content",
   "Prosper pays attention to the fraction of used credit using these variables:<br><ul><li>Revolving credit balance</li><li>Bank card utilization</li><li>Available bank card credit</li></ul><br><br>The trend is curious: The Interest Rate is greater for ratios less than 10%<br>or greater than 40%. The optimum range seems to be in the range of 10-40%<br>Interest Rate vs. Bankcard Utilization<br><br><img src='img/Bankcard-Utilization.png' alt='Interest Rates vs. Bankcard Utilization' height='150' width='300'>");
 
-  $("#insights").attr("data-content", "<ul><li class='insights page0'>A lower Interest Rate means less money paid back.</li><li class='insights page0'>A shorter Term translates into less money paid back.</li><li class='insights page0'>A shorter Term requires higher payments.</li><li class='insights credit-score'>A higher Credit Score awards a lower Interest Rate.</li><li class='insights credit-lines'>More Credit Lines is better than None.</li><li class='insights debt-to-imcome-ratio'>Debt greater than 20-30% the Income increases the Interest Rate.</li><li class='insights total-inquiries'>More Inquiries to your account contributes to a higher Interest Rate.</li><li class='insights bankcard-utilization'>Owing 10-40% of the available credit limit yields lower interests.</li></ul>");
+  $("#insights").attr("data-content", highlight_insights("bankcard-utilization"));
 
   window.var_name = "BankcardUtilization";
 
-  var ratio = pl.map(function(d) {return +d[var_name];});
+  var vals = pl.map(function(d) {return +d[var_name];});
 
-  var data = draw_hist(ratio, "Bankcard Utilization", [0, 1]);
+  var data = draw_hist(vals, "Bankcard Utilization", [0, 1]);
 
   $("g.bar :eq(0)").d3Click();
+
+  $("#wrapup").css("display", d3.sum(explored) >= 3 ? "inline-block" : "none");
 
 }
 
@@ -480,7 +552,7 @@ function total_payment(R, N) {
    * 
    * returns:
    * total payment as percentage 
-   */
+   * */
 
   "use strict";
 
@@ -493,14 +565,18 @@ function total_payment(R, N) {
 
 
 function summary(a) {
+  "use strict";
   /**
    * calculate the summary statistics of the BorrowerAPR
-   * in an array of points. 
+   * in an array of points.
    *
-   */
-  
-  "use strict";
-    
+   * parameters:
+   * a: a d3 array of points
+   *
+   * returns:
+   * an object containing the summary statistics
+   * */
+
   var rates = a[0].map(function(d) {return +d.__data__.BorrowerAPR;});
 
   rates = rates.sort();
@@ -527,11 +603,12 @@ function summary(a) {
 
 
 function filter_selected() {
+  "use strict";
   /**
    * following a "click" event on a histogram's bar,
    * filter the points and the clicked bar
    * to change its class
-   **/
+   * */
   
   d3.selectAll("circle")
     .classed("filtered", false)
@@ -564,11 +641,11 @@ function filter_selected() {
   d3.select("g.bar.filtered text")
     .classed("filtered", true);
 
-
 }
 
 
 jQuery.fn.d3Click = function () {
+  "use strict";
   /**
    * function to simulate a click event on a d3 element
    * http://stackoverflow.com/a/11180172
@@ -580,3 +657,46 @@ jQuery.fn.d3Click = function () {
     e.dispatchEvent(evt);
   });
 };
+
+
+function highlight_insights(page) {
+  "use strict"
+  /**
+   * Define the text that comes up in the "insights" popover
+   * and its classes
+   *
+   * parameters:
+   * page: the page where the "insight" button was clicked
+   *
+   * returns:
+   * html: a string containing the html to display in the popover
+   * */
+  
+  var insights = [
+    {"class": "page0", "insight": "A lower Interest Rate means less money paid back."},
+    {"class": "page0", "insight": "A shorter Term translates into less money paid back,<br>but consider: A shorter Term requires higher payments."},
+    //{"class": "page0", "insight": "A shorter Term requires higher payments."},
+    {"class": "credit-score", "insight": "A higher Credit Score awards a lower Interest Rate."},
+    {"class": "total-inquiries", "insight": "More Inquiries to your account contributes to a higher Interest Rate."},
+    {"class": "debt-to-imcome-ratio", "insight": "Debt greater than 20-30% the Income increases the Interest Rate."},
+    {"class": "credit-lines", "insight": "More Credit Lines is better than None."},
+    {"class": "bankcard-utilization", "insight": "Owing 10-40% of the available credit limit yields lower interests."}
+  ];
+
+  var html = "<ul>",
+      seen = true;
+
+  insights.forEach(function(e, i) {
+    html = html.concat("<li class='insights");
+    if (e.class == page) {
+      html = html.concat(" notice");
+      seen = false;
+    }
+    if (seen) {html = html.concat(" seen")};
+    html = html.concat("'>", e.insight, "</li>");
+  });
+
+  html = html.concat("</ul>");
+
+  return html;
+}
