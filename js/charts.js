@@ -1,15 +1,21 @@
 /**
- * Visualization: Interaction with a Cloud of Loans
+ * Visualization: Interacting with a Cloud of Loans
  *
- * by César Tablas
- * December 2015 - January 2016
- *
+ * by Cesar Tablas
+ * January 2016
  * */
 
 
 function draw_cloud(loan_data) {
-  
   "use strict";
+  /**
+   * This functin is the main entry point for the visualization.
+   * It is called by the script in index.html that loads the data
+   * from the csv file.
+   *
+   * Establishes the main graph dimensions, scales and draws
+   * the cloud of points
+   * */
   
   $("#spinner").remove();
 
@@ -74,9 +80,20 @@ function draw_cloud(loan_data) {
 
 
 function draw_box(a, yScale, val, id, fmt){
-
   "use strict";
-  
+  /**
+   * Draw a boxplot from a d3 array of points.
+   * 
+   * Adapted from http://bl.ocks.org/mbostock/4061502
+   *
+   * parameters:
+   * a:       d3 array of points (all the points or only the filtered ones)
+   * yScale:  d3 scale defined in draw_cloud()
+   * val:     an object containing summary statistics: summary(a)
+   * id:      "#box0" or "#box1", the id of where to place the boxplot
+   * fmt:     format specification for the variable range text above the boxplot
+   * */
+
   $("#" + id).html("");
   
   var total_width = 90,
@@ -157,6 +174,15 @@ function draw_box(a, yScale, val, id, fmt){
     .text(d3.format(".0%")(val.q2));
 
   if (fmt) {
+    /**
+     * #box1 is drawn many times with different types of data:
+     * integers like the CreditScore, and
+     * fractions like the Debt to Income Ratio.
+     *
+     * This variable controls how to format the range of the variable
+     * that appears above the boxplot. This range corresponds to the
+     * clicked bar that is highlighted in the histogram.
+     * */
     var bar = d3.select("g.bar.filtered")[0][0];
 
     var lower_limit = bar.__data__.x,
@@ -177,8 +203,18 @@ function draw_box(a, yScale, val, id, fmt){
 
 
 function draw_hist(vals, label, range) {
-  
   "use strict";
+  /**
+   * Draw a histogram for the variable in consideration.
+   * 
+   * Adapted from http://bl.ocks.org/mbostock/3048450
+   *
+   * parameters:
+   * vals:    an array with the values of the variable
+   * label:   X-axis text to display
+   * range:   an array of [lower_limit, upper_limit] for the histogram
+   *          if needed to override the default one
+   * */
   
   $("#facts").html("");
   
@@ -251,22 +287,25 @@ function draw_hist(vals, label, range) {
     .attr("text-anchor", "left")
     .attr("transform", "translate(2,-2)")
     .text(function(d) {return d3.format(".0%")(d.length / vals.length)});
-    
-  return data;
 
 }
 
 
 function page_0() {
-
   "use strict";
+  /**
+   * Define and display the main elements to complete the first page
+   * of the visualization.
+   *
+   * These elements are: the storyline, table, boxplot, navigation
+   * and buttons.
+   * */
 
   $("#box1").html("");
   d3.selectAll(".filtered").classed("filtered", false);
 
   $("#dropdown").html("");
 
- 
   var val = summary(points),
       term = [1, 3, 5],
       total_payments = [];
@@ -331,16 +370,18 @@ function page_0() {
   $("#dataset").attr("data-content",
   "Prosper Marketplace Inc. is an intermediary of peer to peer lending in the US.<br>In this financing model, the borrower submits a loan application, the investors<br>fund the loan, and the intermediary conducts the process of loaning and<br>collecting the money which is paid back to the investors.<br><br>This dataset contains 114K datapoints about Prosper loans given between<br>Nov 2005 and Mar 2014. Each datapoint has 81 variables.<br><br>For this visualization the dataset has been truncated to about 83K datapoints<br>that use the new Prosper Rating (2009), and to only the 6 variables used.");
 
-  $("#references").attr("data-content", "<ul><li>César Tablas: <a target='_blank' href='https://cesartablas.github.io/eda-loans/'>Exploratory Data Analysis</a> of Prosper Loans</li><li>Reader's Digest: <a target='_blank' href='http://www.rd.com/advice/saving-money/your-credit-score-the-magic-money-number-explained/'>Your Credit Score: The Magic Number Explained</a></li></ul>");
-
   $("#insights").attr("data-content", highlight_insights("page0"));
 
 }
 
 
 function page_1() {
-
   "use strict";
+  /**
+   * Define and display the main elements of the second page
+   * of the visualization and Draw the histogram for the
+   * first variable: Credit Scores.
+   * */
 
   explored[0] = 1;
   
@@ -355,33 +396,29 @@ function page_1() {
 
   $("#pager").html("<li class='previous'><button class='col-md-4 col-md-offset-4 btn btn-default' type='button' onclick='page_0()'><span aria-hidden='true'></span>Previous</button></li>");
 
-  $("#dropdown").html("<button id='dLabel' class='btn btn-default btn-sm'type='button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>Explore Interaction with Other Variables <span class='caret'> </span></button><ul id='explore' class='dropdown-menu' aria-labelledby='dLabel'></ul>");
+  $("#dropdown").html("<button id='dLabel' class='btn btn-default btn-sm'type='button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>Explore Interacting with Other Variables <span class='caret'> </span></button><ul id='explore' class='dropdown-menu' aria-labelledby='dLabel'></ul>");
  
   $("#explore").html("<li><a onclick='page_1()'>Credit Score</a></li><li class='divider'></li><li><a onclick='totalInquiries()'>Inquiries to Your Account</a></li><li><a onclick='debtToIncomeRatio()'>Debt to Income Ratio</a></li></li><li class='divider'></li><li><a onclick='currentCreditLines()'>Number of Credit Lines</a></li><li><a onclick='bankcardUtilization()'>Bank Card Utilization</a></li>");
 
   window.var_name = "CreditScoreRangeUpper";
 
-  var creditScores = pl.map(function(d) {return +d[var_name];});
+  var vals = pl.map(function(d) {return +d[var_name];});
   
-  var data = draw_hist(creditScores, "Credit Scores", [600,880]);
+  draw_hist(vals, "Credit Scores", [600,880]);
 
   $("g.bar :eq(0)").d3Click();
 
-  if (d3.sum(explored) >= 3) {
-    $("#wrapup").css("display", "inline-block");
-  }
-  else {
-    $("#wrapup").css("display", "none");
-  }
-
+  $("#wrapup").css("display", d3.sum(explored) >= 3 ? "inline-block" : "none");
 
 }
 
 
 function currentCreditLines() {
-
   "use strict";
-
+  /**
+   * Draw histogram and change page content for: Credit Lines
+   * */
+  
   explored[1] = 1;
 
   $("#box1").html("");
@@ -389,7 +426,6 @@ function currentCreditLines() {
 
   $("#tale").html("The number of Credit Lines that a borrower has, affects their Credit Score. Counterintuitively, the more Credit Lines a person has, the lower their Interest Rate.<br><br><span class='punchline'>Explore how more than 10 Credit Lines is better than having 0.</span>");
 
-  //$("#insights").attr("data-content", "<ul><li class='insights page0'>A lower Interest Rate means less money paid back.</li><li class='insights page0'>A shorter Term translates into less money paid back.</li><li class='insights page0'>A shorter Term requires higher payments.</li><li class='insights credit-score'>A higher Credit Score awards a lower Interest Rate.</li><li class='insights credit-lines'>More Credit Lines is better than None.</li></ul>");
   $("#insights").attr("data-content", highlight_insights("credit-lines"));
   
   $("#dataset").attr("data-content",
@@ -397,26 +433,22 @@ function currentCreditLines() {
 
   window.var_name = "CurrentCreditLines";
 
-  var ratio = pl.map(function(d) {return +d[var_name];});
+  var vals = pl.map(function(d) {return +d[var_name];});
 
-  var data = draw_hist(ratio, "Credit Lines", [0, 20]);
+  var data = draw_hist(vals, "Credit Lines", [0, 20]);
 
   $("g.bar :eq(0)").d3Click();
 
-  if (d3.sum(explored) >= 3) {
-    $("#wrapup").css("display", "inline-block");
-  }
-  else {
-    $("#wrapup").css("display", "none");
-  }
-
+  $("#wrapup").css("display", d3.sum(explored) >= 3 ? "inline-block" : "none");
 
 }
 
 
 function debtToIncomeRatio() {
-
   "use strict";
+  /**
+   * Draw histogram and change page content for: Debt to Income Ratio
+   * */
 
   explored[2] = 1;
 
@@ -433,28 +465,24 @@ function debtToIncomeRatio() {
 
   window.var_name = "DebtToIncomeRatio";
 
-  var ratio = pl.map(function(d) {return +d[var_name];});
+  var vals = pl.map(function(d) {return +d[var_name];});
 
-  var data = draw_hist(ratio, "Debt to Income Ratio", [0, 1]);
+  var data = draw_hist(vals, "Debt to Income Ratio", [0, 1]);
 
   $("g.bar :eq(0)").d3Click();
 
   d3.selectAll(".insights.page-0").classed("notice", true);
 
-  if (d3.sum(explored) >= 3) {
-    $("#wrapup").css("display", "inline-block");
-  }
-  else {
-    $("#wrapup").css("display", "none");
-  }
-
+  $("#wrapup").css("display", d3.sum(explored) >= 3 ? "inline-block" : "none");
 
 }
 
 
 function totalInquiries() {
-
   "use strict";
+  /**
+   * Draw histogram and change page content for: Inquiries
+   * */
 
   explored[3] = 1;
 
@@ -470,26 +498,22 @@ function totalInquiries() {
 
   window.var_name = "TotalInquiries";
 
-  var ratio = pl.map(function(d) {return +d[var_name];});
+  var vals = pl.map(function(d) {return +d[var_name];});
 
-  var data = draw_hist(ratio, "Total Inquiries", [0, 20]);
+  var data = draw_hist(vals, "Total Inquiries", [0, 20]);
 
   $("g.bar :eq(0)").d3Click();
 
-  if (d3.sum(explored) >= 3) {
-    $("#wrapup").css("display", "inline-block");
-  }
-  else {
-    $("#wrapup").css("display", "none");
-  }
-
+  $("#wrapup").css("display", d3.sum(explored) >= 3 ? "inline-block" : "none");
 
 }
 
 
 function bankcardUtilization() {
-
   "use strict";
+  /**
+   * Draw histogram and change page content for: Bankcard Utilization
+   * */
 
   explored[4] = 1;
 
@@ -505,18 +529,13 @@ function bankcardUtilization() {
 
   window.var_name = "BankcardUtilization";
 
-  var ratio = pl.map(function(d) {return +d[var_name];});
+  var vals = pl.map(function(d) {return +d[var_name];});
 
-  var data = draw_hist(ratio, "Bankcard Utilization", [0, 1]);
+  var data = draw_hist(vals, "Bankcard Utilization", [0, 1]);
 
   $("g.bar :eq(0)").d3Click();
 
-  if (d3.sum(explored) >= 3) {
-    $("#wrapup").css("display", "inline-block");
-  }
-  else {
-    $("#wrapup").css("display", "none");
-  }
+  $("#wrapup").css("display", d3.sum(explored) >= 3 ? "inline-block" : "none");
 
 }
 
@@ -533,7 +552,7 @@ function total_payment(R, N) {
    * 
    * returns:
    * total payment as percentage 
-   */
+   * */
 
   "use strict";
 
@@ -549,9 +568,14 @@ function summary(a) {
   "use strict";
   /**
    * calculate the summary statistics of the BorrowerAPR
-   * in an array of points. 
+   * in an array of points.
    *
-   */
+   * parameters:
+   * a: a d3 array of points
+   *
+   * returns:
+   * an object containing the summary statistics
+   * */
 
   var rates = a[0].map(function(d) {return +d.__data__.BorrowerAPR;});
 
@@ -584,7 +608,7 @@ function filter_selected() {
    * following a "click" event on a histogram's bar,
    * filter the points and the clicked bar
    * to change its class
-   **/
+   * */
   
   d3.selectAll("circle")
     .classed("filtered", false)
@@ -617,7 +641,6 @@ function filter_selected() {
   d3.select("g.bar.filtered text")
     .classed("filtered", true);
 
-
 }
 
 
@@ -638,6 +661,16 @@ jQuery.fn.d3Click = function () {
 
 function highlight_insights(page) {
   "use strict"
+  /**
+   * Define the text that comes up in the "insights" popover
+   * and its classes
+   *
+   * parameters:
+   * page: the page where the "insight" button was clicked
+   *
+   * returns:
+   * html: a string containing the html to display in the popover
+   * */
   
   var insights = [
     {"class": "page0", "insight": "A lower Interest Rate means less money paid back."},
@@ -667,10 +700,3 @@ function highlight_insights(page) {
 
   return html;
 }
-
-
-function wrapup() {
-  
-}
-
-

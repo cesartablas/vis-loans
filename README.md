@@ -121,6 +121,10 @@ I prepared the [second version](http://cesartablas.github.io/vis-loans/index2.ht
 
 - Colors chosen with [Color Brewer 2.0](http://colorbrewer2.org/).
 
+- Bostok, Mike (2012). Box Plots. found at [http://bl.ocks.org/mbostock/4061502](http://bl.ocks.org/mbostock/4061502)
+
+- Bostok, Mike (2012). Histogram. found at [http://bl.ocks.org/mbostock/3048450](http://bl.ocks.org/mbostock/3048450)
+
 - *Animated loading icon* found at [http://www.bootply.com/128062](http://www.bootply.com/128062)
 
 - Answer to *How to invoke a "click" event programmatically using d3* found at [http://stackoverflow.com/a/11180172](http://stackoverflow.com/a/11180172)
