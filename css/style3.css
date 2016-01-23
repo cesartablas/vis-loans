@@ -36,12 +36,6 @@ text.axis, text.frequency, .var-range {
   stroke-width: 0.3;
 }
 
-#cloud > svg > g > text.axis.xaxis.text {
-  /*stroke: #bf812d;*/
-  stroke: #dfc27d;
-  stroke-width: 0.3;
-}
-
 text.frequency {
   opacity: 0;
 }
@@ -58,7 +52,7 @@ text.frequency {
   font-weight: 100;
 }
 
-.seen {
+.insights.seen {
   font-weight: 300;
 }
 
@@ -104,6 +98,7 @@ th, tr, td {
   width: 900px;
   height: 350px;
   position: relative;
+    /* outline: red solid 1px; */
 }
 
 #cloud .text, .tick, .domain {
@@ -123,6 +118,7 @@ th, tr, td {
   height: 350px;
   float: left;
   position: relative;
+  /* outline: red solid 1px; */
 }
 
 .tooltip {
