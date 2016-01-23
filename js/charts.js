@@ -64,6 +64,12 @@ function draw_cloud(loan_data) {
     .attr("transform", "translate("+ (margin.left/2) +","+(height/2+margin.top)+")rotate(-90)")
     .text("Borrower Interest Rate");
 
+  cloud.append("text")
+    .attr("class", "axis xaxis text")
+    .attr("text-anchor", "middle")
+    .attr("transform", "translate("+ (width/2+margin.left) +","+(height-margin.top*1)+")")
+    .text("");
+
   //A counter to use in the x-scale that only serves to spread
   //the points horizontally. n is incrementes after drawing each circle
   var n = 0;
@@ -229,7 +235,7 @@ function draw_hist(vals, label, range) {
    * */
 
   //Clear the previous content of #facts, where a table or histogram
-  //are displayed  
+  //are displayed
   $("#facts").html("");
 
   //Dimensions  
@@ -325,6 +331,8 @@ function page_0() {
   $("#box1").html("");
   d3.selectAll(".filtered").classed("filtered", false);
   $("#dropdown").html("");
+  d3.select("#cloud > svg > g > text.axis.xaxis.text").text("The position in the X-Axis is assigned randomly, used only to spread out the points and create the effect of a cloud of points.");
+
 
   //Calculate summary statistics of all points in dataset
   //and the data for the table of total payments
@@ -407,6 +415,8 @@ function page_1() {
    * first variable: Credit Scores.
    * */
 
+  //Clear previous content
+  d3.select("#cloud > svg > g > text.axis.xaxis.text").text("");
   //Flag this variable as explored, to decide if "Wrap-Up" button is revealed  
   explored[0] = 1;
   $("#wrapup").css("display", d3.sum(explored) >= 3 ? "inline-block" : "none");

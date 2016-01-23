@@ -23,11 +23,19 @@ This [visualization](http://cesartablas.github.io/vis-loans/) explores the relat
 
 The main idea behind this visualization is to plot a difuse arrangement of points simulating a cloud of points ordered by the Borrower Interest Rate in the y-axis. The x-axis serves only to spread out the points. The colors chosen resemble a cloud at dusk: golden and blue colors. I obtained the full scale of 10 colors from [Color Brewer 2.0](http://colorbrewer2.org/).
 
+To convey the message of this visualization I chose to present the relationships between the Interest Rates and five other variables, and show how the Interest Rates move with different ranges of those variables. In each case the second variable is displayed on a histogram that serves two purposes: depict its distribution, and let the user select a range by clicking on the corresponding bar.
+
+The relationship between the Interest Rates and the selected range of the variable beeing considered is seen in two ways: 1) the corresponding points are highligted in the cloud with a different color (blue), forming a band or bin with the filtered or selected points, and 2) two boxplots are draw, one for the whole dataset (golden), and another for the points belonging to the range selected, using the same highlighting color (blue), and making it easy to compare side by side both groups.
+
+I needed to stress the importance of a lower interest rate when it comes to paying less money overall. I chose to express this information using a table of total payments with varying terms and interest rates. I chose to use the interest rates from summary statistics that are easily related to the golden boxplot. To call attention to the minimum and maximum total payments, I used a red color as a preattentive attribute.
+ 
 I wanted the font to be thin and display both letters and digits clearly. I chose Łukasz Dziedzic's [Lato](http://www.latofonts.com) font. It's interesting that Lato means 'Summer' in Polish, making this a summer cloud.
 
 The main navigation is provided through "Next" and "Previous" buttons. The interaction with the variables of interest is provided by clicking on the histogram bars of the distribution of such variables. After having explored at least 3 variables, a "Wrap-Up" button is revealed to see the conclusion or "takeaway" of this visualization.
 
 The footer contains a "dataset" button that describes the data set incrementally: every new page adds more information about the data set. The same with the "insights" button, which incrementally adds more insights, or conclusions drawn from the visualization.
+
+The content of the "dataset", "insights" and "Wrap-Up" buttons, though important, is static compared to the changes seen during the interaction with the graphs. For this reason I chose to display them only if requested by the user clicking on their buttons. The alternative would have been scrolling, that I purposed to avoid, or compete with the screen "real estate" and make the graphs or text smaller, idea that I discarded. 
 
 The original dataset contains 114K observations on Prosper Loans, with 81 variables. Of these, only 83K use the new rating system used since July 2009. The dataset used for the visualization is a random sample of 10,000 points from the original 83K, and only the 6 variables of interest. The trends and values are congruent and the loading time is reduced considerably.
  
@@ -52,7 +60,7 @@ Other feedback were not followed, but were dully considered, mainly:
 
 ## Feedback 
 
-I received the following feedback on the [first version](http://cesartablas.github.io/vis-loans/index1.html) of the visualization:
+I received the following feedback on the [first version](http://cesartablas.github.io/vis-loans/index1.html) of the visualization (consider that this version was not at all interactive, only the layout, colors, and main idea, even the buttons were not active):
 
 [**Bogdan:**](http://linkedin.com/in/bogdanpascalau/)
 
@@ -82,7 +90,7 @@ I’ve reviewed your graph, and here are a couple of design tweaks that could im
 
 - I would probably move the graph right above the title, and move the question and description beneath it. That way, what’s visual comes first and before the page fold
   
-I prepared the [second version](http://cesartablas.github.io/vis-loans/index2.html) taking some of this feedback into consideration and posted it on Udacity's forum. I received the following feedback:
+I prepared the [second version](http://cesartablas.github.io/vis-loans/index2.html) taking some of this feedback into consideration and adding interactivity and most of the features of the final version. After posting it on Udacity's forum. I received the following feedback:
 
 **@Stephen1:**
 
